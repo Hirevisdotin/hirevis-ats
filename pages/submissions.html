@@ -1594,10 +1594,46 @@
 
 function editSubmission(id) {
     editingSubmissionId = id;
+
     const submission =
         submissions.find(function(item) {
             return item.id === id;
         });
+
+    if (!submission) {
+        return;
+    }
+
+    document.getElementById("candidateName").value =
+        submission.candidate || "";
+
+    document.getElementById("clientName").value =
+        submission.client || "";
+
+    document.getElementById("position").value =
+        submission.position || "";
+
+    document.getElementById("recruiter").value =
+        submission.recruiter || "";
+
+    document.getElementById("submissionDate").value =
+        submission.date || "";
+
+    document.getElementById("currentStage").value =
+        submission.stage || "CV Sent to Client";
+
+    document.getElementById("clientFeedback").value =
+        submission.feedback || "";
+
+    document.getElementById("remarks").value =
+        submission.remarks || "";
+
+    document
+        .getElementById("submissionModal")
+        .classList.add("show");
+}
+
+
 /* =========================
    DELETE SUBMISSION
 ========================= */
@@ -1634,40 +1670,6 @@ function deleteSubmission(id) {
 
     updateStatistics();
 }
-    if (!submission) {
-        return;
-    }
-
-    document.getElementById("candidateName").value =
-        submission.candidate || "";
-
-    document.getElementById("clientName").value =
-        submission.client || "";
-
-    document.getElementById("position").value =
-        submission.position || "";
-
-    document.getElementById("recruiter").value =
-        submission.recruiter || "";
-
-    document.getElementById("submissionDate").value =
-        submission.date || "";
-
-    document.getElementById("currentStage").value =
-        submission.stage || "CV Sent to Client";
-
-    document.getElementById("clientFeedback").value =
-        submission.feedback || "";
-
-    document.getElementById("remarks").value =
-        submission.remarks || "";
-
-    document
-        .getElementById("submissionModal")
-        .classList.add("show");
-}
-
-
         /* =========================
            UPDATE STATISTICS
            ========================= */
