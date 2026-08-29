@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interviews | Hirevis ATS</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f7f9;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            padding: 24px 16px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 10px 28px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #F28C28, #5B8C2A);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .brand-text h2 {
+            font-size: 19px;
+            color: #111827;
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 3px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #4b5563;
+            padding: 11px 12px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: #fff4e8;
+            color: #F28C28;
+        }
+
+        .nav-item.active {
+            background: #fff1df;
+            color: #F28C28;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .main {
+            margin-left: 250px;
+            padding: 32px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            font-size: 28px;
+            color: #111827;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .primary-btn {
+            border: none;
+            background: #F28C28;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+            box-shadow: 0 5px 15px rgba(242, 140, 40, 0.20);
+        }
+
+        .primary-btn:hover {
+            background: #df7917;
+            transform: translateY(-1px);
+        }
+
+        .secondary-btn {
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #374151;
+            padding: 11px 18px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .secondary-btn:hover {
+            background: #f9fafb;
+        }
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        /* =========================
+           TABLE
+        ========================== */
+
+        .content-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 18px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            padding: 0 14px 0 42px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #F28C28;
+            box-shadow: 0 0 0 3px rgba(242, 140, 40, 0.10);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 13px;
+            color: #9ca3af;
+        }
+
+        .status-filter {
+            height: 44px;
+            min-width: 190px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            padding: 0 12px;
+            background: white;
+            font-size: 14px;
+            color: #374151;
+            outline: none;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            background: #f9fafb;
+            color: #6b7280;
+            text-align: left;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f1f3;
+            font-size: 13px;
+            color: #374151;
+        }
+
+        tr:hover td {
+            background: #fffaf5;
+        }
+
+        .interview-id {
+            font-weight: 700;
+            color: #F28C28;
+        }
+
+        .candidate-name {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .client-name {
+            font-weight: 600;
+        }
+
+        .position {
+            color: #6b7280;
+        }
+
+        .date-main {
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .date-time {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 3px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .badge-scheduled {
+            background: #eaf3ff;
+            color: #2563eb;
+        }
+
+        .badge-completed {
+            background: #eef8e9;
+            color: #4d7c0f;
+        }
+
+        .badge-selected {
+            background: #e8f7ee;
+            color: #15803d;
+        }
+
+        .badge-rejected {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .badge-rescheduled {
+            background: #fff4e5;
+            color: #b45309;
+        }
+
+        .badge-cancelled {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .badge-default {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .action-btn {
+            border: 1px solid #d1d5db;
+            background: white;
+            color: #374151;
+            padding: 7px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .action-btn:hover {
+            border-color: #F28C28;
+            color: #F28C28;
+        }
+
+        .delete-btn:hover {
+            border-color: #dc2626;
+            color: #dc2626;
+        }
+
+        .action-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6b7280;
+        }
+
+        /* =========================
+           MODAL
+        ========================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 760px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.20);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .close-btn {
+            border: none;
+            background: #f3f4f6;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            color: #4b5563;
+        }
+
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .form {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .form-group input,
+        .form-group select {
+            height: 42px;
+        }
+
+        .form-group textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #F28C28;
+            box-shadow: 0 0 0 3px rgba(242, 140, 40, 0.10);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 18px 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                padding: 22px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .status-filter {
+                width: 100%;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 18px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-logo">H</div>
+
+            <div class="brand-text">
+                <h2>Hirevis</h2>
+                <p>Recruitment Redefined</p>
+            </div>
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">Main</div>
+
+            <a class="nav-item" href="../index.html">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">Recruitment</div>
+
+            <a class="nav-item" href="candidates.html">
+                <span class="nav-icon">👤</span>
+                <span>Candidates</span>
+            </a>
+
+            <a class="nav-item" href="clients.html">
+                <span class="nav-icon">🏢</span>
+                <span>Clients</span>
+            </a>
+
+            <a class="nav-item" href="requirements.html">
+                <span class="nav-icon">📋</span>
+                <span>Requirements</span>
+            </a>
+
+            <a class="nav-item" href="submissions.html">
+                <span class="nav-icon">📤</span>
+                <span>Submissions</span>
+            </a>
+
+            <a class="nav-item active" href="interviews.html">
+                <span class="nav-icon">📅</span>
+                <span>Interviews</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">🔔</span>
+                <span>Follow-ups</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📄</span>
+                <span>Offers</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">🎯</span>
+                <span>Joinings</span>
+            </a>
+
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">Management</div>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="page-title">
+                <h1>Interviews</h1>
+                <p>Schedule, track and manage candidate interviews.</p>
+            </div>
+
+            <button
+                class="primary-btn"
+                onclick="openModal()"
+            >
+                + Schedule Interview
+            </button>
+
+        </div>
+
+
+        <!-- =========================
+             STATISTICS
+        ========================== -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-label">Total Interviews</div>
+                <div class="stat-value" id="totalCount">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Scheduled</div>
+                <div class="stat-value" id="scheduledCount">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Completed</div>
+                <div class="stat-value" id="completedCount">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Selected</div>
+                <div class="stat-value" id="selectedCount">0</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-label">Rejected</div>
+                <div class="stat-value" id="rejectedCount">0</div>
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             TABLE
+        ========================== -->
+
+        <section class="content-card">
+
+            <div class="toolbar">
+
+                <div class="search-box">
+
+                    <span class="search-icon">🔍</span>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search candidate, client, position or interview ID..."
+                        oninput="renderTable()"
+                    >
+
+                </div>
+
+                <select
+                    class="status-filter"
+                    id="statusFilter"
+                    onchange="renderTable()"
+                >
+
+                    <option value="All">All Statuses</option>
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Selected">Selected</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Rescheduled">Rescheduled</option>
+                    <option value="Cancelled">Cancelled</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Interview</th>
+                            <th>Candidate</th>
+                            <th>Client</th>
+                            <th>Position</th>
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Interviewer</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="interviewTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         SCHEDULE INTERVIEW MODAL
+    ========================== -->
+
+    <div
+        class="modal-overlay"
+        id="interviewModal"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+                    Schedule Interview
+                </h2>
+
+                <button
+                    class="close-btn"
+                    onclick="closeModal()"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form
+                class="form"
+                id="interviewForm"
+            >
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="candidateName">
+                            Candidate Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="candidateName"
+                            required
+                            placeholder="Enter candidate name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clientName">
+                            Client Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clientName"
+                            required
+                            placeholder="Enter client name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="position">
+                            Position *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="position"
+                            required
+                            placeholder="Enter position"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewer">
+                            Interviewer
+                        </label>
+
+                        <input
+                            type="text"
+                            id="interviewer"
+                            placeholder="Interviewer name"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewDate">
+                            Interview Date *
+                        </label>
+
+                        <input
+                            type="date"
+                            id="interviewDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewTime">
+                            Interview Time *
+                        </label>
+
+                        <input
+                            type="time"
+                            id="interviewTime"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewType">
+                            Interview Type
+                        </label>
+
+                        <select id="interviewType">
+
+                            <option value="Video Call">
+                                Video Call
+                            </option>
+
+                            <option value="Phone">
+                                Phone
+                            </option>
+
+                            <option value="In-Person">
+                                In-Person
+                            </option>
+
+                            <option value="Walk-in">
+                                Walk-in
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="interviewStatus">
+                            Status
+                        </label>
+
+                        <select id="interviewStatus">
+
+                            <option value="Scheduled">
+                                Scheduled
+                            </option>
+
+                            <option value="Completed">
+                                Completed
+                            </option>
+
+                            <option value="Selected">
+                                Selected
+                            </option>
+
+                            <option value="Rejected">
+                                Rejected
+                            </option>
+
+                            <option value="Rescheduled">
+                                Rescheduled
+                            </option>
+
+                            <option value="Cancelled">
+                                Cancelled
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="interviewFeedback">
+                            Interview Feedback
+                        </label>
+
+                        <textarea
+                            id="interviewFeedback"
+                            placeholder="Enter interview feedback..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label for="remarks">
+                            Remarks
+                        </label>
+
+                        <textarea
+                            id="remarks"
+                            placeholder="Add additional remarks..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <div class="modal-footer">
+
+                <button
+                    class="secondary-btn"
+                    type="button"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-btn"
+                    type="button"
+                    onclick="saveInterview()"
+                >
+                    Save Interview
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        let editingInterviewId = null;
+
+
+        /* =========================
+           SAMPLE DATA
+        ========================== */
+
+        let interviews = [
+
+            {
+                id: "HV-INT-000001",
+                candidate: "Amit Sharma",
+                client: "ABC Technologies",
+                position: "Project Manager",
+                date: "2026-08-30",
+                time: "11:00",
+                type: "Video Call",
+                interviewer: "Rahul Mehta",
+                status: "Scheduled",
+                feedback: "",
+                remarks: "First round interview."
+            },
+
+            {
+                id: "HV-INT-000002",
+                candidate: "Priya Das",
+                client: "TechNova Solutions",
+                position: "HR Manager",
+                date: "2026-08-28",
+                time: "14:30",
+                type: "Video Call",
+                interviewer: "Neha Singh",
+                status: "Completed",
+                feedback: "Good communication skills.",
+                remarks: "Waiting for client decision."
+            },
+
+            {
+                id: "HV-INT-000003",
+                candidate: "Rahul Singh",
+                client: "Global Infotech",
+                position: "Senior Developer",
+                date: "2026-08-27",
+                time: "16:00",
+                type: "In-Person",
+                interviewer: "Ankit Verma",
+                status: "Selected",
+                feedback: "Strong technical skills.",
+                remarks: "Selected for final discussion."
+            },
+
+            {
+                id: "HV-INT-000004",
+                candidate: "Sneha Roy",
+                client: "ABC Technologies",
+                position: "Business Analyst",
+                date: "2026-08-26",
+                time: "12:00",
+                type: "Phone",
+                interviewer: "Rahul Mehta",
+                status: "Rejected",
+                feedback: "Experience did not match.",
+                remarks: "Client rejected."
+            },
+
+            {
+                id: "HV-INT-000005",
+                candidate: "Arjun Mehta",
+                client: "FinCore Ltd",
+                position: "Finance Manager",
+                date: "2026-08-31",
+                time: "10:30",
+                type: "Video Call",
+                interviewer: "Priya Kapoor",
+                status: "Scheduled",
+                feedback: "",
+                remarks: "Technical round."
+            }
+
+        ];
+
+
+        /* =========================
+           LOAD LOCAL STORAGE
+        ========================== */
+
+        const storedInterviews =
+            localStorage.getItem("hirevisInterviews");
+
+        if (storedInterviews) {
+
+            try {
+
+                interviews =
+                    JSON.parse(storedInterviews);
+
+            } catch (error) {
+
+                console.log(
+                    "Unable to load saved interviews.",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           SAVE LOCAL STORAGE
+        ========================== */
+
+        function saveToLocalStorage() {
+
+            localStorage.setItem(
+                "hirevisInterviews",
+                JSON.stringify(interviews)
+            );
+
+        }
+
+
+        /* =========================
+           GENERATE ID
+        ========================== */
+
+        function generateInterviewId() {
+
+            let maxNumber = 0;
+
+            interviews.forEach(function(interview) {
+
+                const match =
+                    interview.id.match(/HV-INT-(\d+)/);
+
+                if (match) {
+
+                    const number =
+                        parseInt(match[1], 10);
+
+                    if (number > maxNumber) {
+                        maxNumber = number;
+                    }
+
+                }
+
+            });
+
+            return "HV-INT-" +
+                String(maxNumber + 1).padStart(6, "0");
+
+        }
+
+
+        /* =========================
+           OPEN MODAL
+        ========================== */
+
+        function openModal() {
+
+            editingInterviewId = null;
+
+            document
+                .getElementById("modalTitle")
+                .textContent = "Schedule Interview";
+
+            document
+                .getElementById("interviewModal")
+                .classList.add("show");
+
+            const dateInput =
+                document.getElementById("interviewDate");
+
+            if (!dateInput.value) {
+
+                dateInput.value =
+                    new Date()
+                        .toISOString()
+                        .split("T")[0];
+
+            }
+
+        }
+
+
+        /* =========================
+           CLOSE MODAL
+        ========================== */
+
+        function closeModal() {
+
+            document
+                .getElementById("interviewModal")
+                .classList.remove("show");
+
+            editingInterviewId = null;
+
+        }
+
+
+        /* =========================
+           SAVE INTERVIEW
+        ========================== */
+
+        function saveInterview() {
+
+            const candidate =
+                document
+                    .getElementById("candidateName")
+                    .value
+                    .trim();
+
+            const client =
+                document
+                    .getElementById("clientName")
+                    .value
+                    .trim();
+
+            const position =
+                document
+                    .getElementById("position")
+                    .value
+                    .trim();
+
+            const interviewer =
+                document
+                    .getElementById("interviewer")
+                    .value
+                    .trim();
+
+            const date =
+                document
+                    .getElementById("interviewDate")
+                    .value;
+
+            const time =
+                document
+                    .getElementById("interviewTime")
+                    .value;
+
+            const type =
+                document
+                    .getElementById("interviewType")
+                    .value;
+
+            const status =
+                document
+                    .getElementById("interviewStatus")
+                    .value;
+
+            const feedback =
+                document
+                    .getElementById("interviewFeedback")
+                    .value
+                    .trim();
+
+            const remarks =
+                document
+                    .getElementById("remarks")
+                    .value
+                    .trim();
+
+
+            if (!candidate || !client || !position || !date || !time) {
+
+                alert(
+                    "Please fill Candidate, Client, Position, Date and Time."
+                );
+
+                return;
+
+            }
+
+
+            const interviewData = {
+
+                id:
+                    editingInterviewId ||
+                    generateInterviewId(),
+
+                candidate: candidate,
+
+                client: client,
+
+                position: position,
+
+                date: date,
+
+                time: time,
+
+                type: type,
+
+                interviewer:
+                    interviewer || "Not Assigned",
+
+                status: status,
+
+                feedback: feedback,
+
+                remarks: remarks
+
+            };
+
+
+            if (editingInterviewId) {
+
+                const index =
+                    interviews.findIndex(function(item) {
+
+                        return item.id ===
+                            editingInterviewId;
+
+                    });
+
+
+                if (index !== -1) {
+
+                    interviews[index] =
+                        interviewData;
+
+                }
+
+            } else {
+
+                interviews.unshift(
+                    interviewData
+                );
+
+            }
+
+
+            saveToLocalStorage();
+
+            document
+                .getElementById("interviewForm")
+                .reset();
+
+            closeModal();
+
+            renderTable();
+
+            updateStatistics();
+
+        }
+
+
+        /* =========================
+           EDIT INTERVIEW
+        ========================== */
+
+        function editInterview(id) {
+
+            const interview =
+                interviews.find(function(item) {
+
+                    return item.id === id;
+
+                });
+
+
+            if (!interview) {
+                return;
+            }
+
+
+            editingInterviewId = id;
+
+
+            document
+                .getElementById("modalTitle")
+                .textContent = "Edit Interview";
+
+
+            document
+                .getElementById("candidateName")
+                .value =
+                    interview.candidate || "";
+
+
+            document
+                .getElementById("clientName")
+                .value =
+                    interview.client || "";
+
+
+            document
+                .getElementById("position")
+                .value =
+                    interview.position || "";
+
+
+            document
+                .getElementById("interviewer")
+                .value =
+                    interview.interviewer || "";
+
+
+            document
+                .getElementById("interviewDate")
+                .value =
+                    interview.date || "";
+
+
+            document
+                .getElementById("interviewTime")
+                .value =
+                    interview.time || "";
+
+
+            document
+                .getElementById("interviewType")
+                .value =
+                    interview.type || "Video Call";
+
+
+            document
+                .getElementById("interviewStatus")
+                .value =
+                    interview.status || "Scheduled";
+
+
+            document
+                .getElementById("interviewFeedback")
+                .value =
+                    interview.feedback || "";
+
+
+            document
+                .getElementById("remarks")
+                .value =
+                    interview.remarks || "";
+
+
+            document
+                .getElementById("interviewModal")
+                .classList.add("show");
+
+        }
+
+
+        /* =========================
+           DELETE INTERVIEW
+        ========================== */
+
+        function deleteInterview(id) {
+
+            const interview =
+                interviews.find(function(item) {
+
+                    return item.id === id;
+
+                });
+
+
+            if (!interview) {
+                return;
+            }
+
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete " +
+                    interview.id +
+                    " for " +
+                    interview.candidate +
+                    "?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            interviews =
+                interviews.filter(function(item) {
+
+                    return item.id !== id;
+
+                });
+
+
+            saveToLocalStorage();
+
+            renderTable();
+
+            updateStatistics();
+
+        }
+
+
+        /* =========================
+           STATUS BADGE
+        ========================== */
+
+        function getBadgeClass(status) {
+
+            if (status === "Scheduled") {
+                return "badge-scheduled";
+            }
+
+            if (status === "Completed") {
+                return "badge-completed";
+            }
+
+            if (status === "Selected") {
+                return "badge-selected";
+            }
+
+            if (status === "Rejected") {
+                return "badge-rejected";
+            }
+
+            if (status === "Rescheduled") {
+                return "badge-rescheduled";
+            }
+
+            if (status === "Cancelled") {
+                return "badge-cancelled";
+            }
+
+            return "badge-default";
+
+        }
+
+
+        /* =========================
+           FORMAT DATE
+        ========================== */
+
+        function formatDate(dateString) {
+
+            if (!dateString) {
+                return "-";
+            }
+
+            const date =
+                new Date(
+                    dateString + "T00:00:00"
+                );
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =========================
+           FORMAT TIME
+        ========================== */
+
+        function formatTime(timeString) {
+
+            if (!timeString) {
+                return "-";
+            }
+
+            const parts =
+                timeString.split(":");
+
+            let hour =
+                parseInt(parts[0], 10);
+
+            const minute =
+                parts[1];
+
+            const period =
+                hour >= 12 ? "PM" : "AM";
+
+            hour =
+                hour % 12 || 12;
+
+            return hour +
+                ":" +
+                minute +
+                " " +
+                period;
+
+        }
+
+
+        /* =========================
+           RENDER TABLE
+        ========================== */
+
+        function renderTable() {
+
+            const tableBody =
+                document.getElementById(
+                    "interviewTableBody"
+                );
+
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+
+            const selectedStatus =
+                document
+                    .getElementById("statusFilter")
+                    .value;
+
+
+            const filtered =
+                interviews.filter(function(interview) {
+
+                    const matchesSearch =
+
+                        interview.id
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        interview.candidate
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        interview.client
+                            .toLowerCase()
+                            .includes(search)
+
+                        ||
+
+                        interview.position
+                            .toLowerCase()
+                            .includes(search);
+
+
+                    const matchesStatus =
+
+                        selectedStatus === "All"
+
+                        ||
+
+                        interview.status ===
+                            selectedStatus;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesStatus
+                    );
+
+                });
+
+
+            if (filtered.length === 0) {
+
+                tableBody.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="9">
+
+                            <div class="empty-state">
+                                No interviews found.
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tableBody.innerHTML =
+
+                filtered.map(function(interview) {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                <span class="interview-id">
+                                    ${escapeHtml(interview.id)}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="candidate-name">
+                                    ${escapeHtml(interview.candidate)}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="client-name">
+                                    ${escapeHtml(interview.client)}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="position">
+                                    ${escapeHtml(interview.position)}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="date-main">
+                                    ${formatDate(interview.date)}
+                                </div>
+
+                                <div class="date-time">
+                                    ${formatTime(interview.time)}
+                                </div>
+
+                            </td>
+
+                            <td>
+                                ${escapeHtml(interview.type)}
+                            </td>
+
+                            <td>
+                                ${escapeHtml(interview.interviewer)}
+                            </td>
+
+                            <td>
+
+                                <span class="badge ${getBadgeClass(interview.status)}">
+                                    ${escapeHtml(interview.status)}
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                <div class="action-group">
+
+                                    <button
+                                        class="action-btn"
+                                        onclick="editInterview('${interview.id}')"
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        class="action-btn delete-btn"
+                                        onclick="deleteInterview('${interview.id}')"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+
+
+        /* =========================
+           STATISTICS
+        ========================== */
+
+        function updateStatistics() {
+
+            document
+                .getElementById("totalCount")
+                .textContent =
+                    interviews.length;
+
+
+            const scheduled =
+                interviews.filter(function(interview) {
+
+                    return interview.status ===
+                        "Scheduled";
+
+                }).length;
+
+
+            const completed =
+                interviews.filter(function(interview) {
+
+                    return interview.status ===
+                        "Completed";
+
+                }).length;
+
+
+            const selected =
+                interviews.filter(function(interview) {
+
+                    return interview.status ===
+                        "Selected";
+
+                }).length;
+
+
+            const rejected =
+                interviews.filter(function(interview) {
+
+                    return interview.status ===
+                        "Rejected";
+
+                }).length;
+
+
+            document
+                .getElementById("scheduledCount")
+                .textContent =
+                    scheduled;
+
+
+            document
+                .getElementById("completedCount")
+                .textContent =
+                    completed;
+
+
+            document
+                .getElementById("selectedCount")
+                .textContent =
+                    selected;
+
+
+            document
+                .getElementById("rejectedCount")
+                .textContent =
+                    rejected;
+
+        }
+
+
+        /* =========================
+           HTML ESCAPE
+        ========================== */
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* =========================
+           CLOSE MODAL ON OUTSIDE CLICK
+        ========================== */
+
+        document
+            .getElementById("interviewModal")
+            .addEventListener(
+                "click",
+                function(event) {
+
+                    if (event.target === this) {
+                        closeModal();
+                    }
+
+                }
+            );
+
+
+        /* =========================
+           INITIAL LOAD
+        ========================== */
+
+        renderTable();
+
+        updateStatistics();
+
+    </script>
+
+</body>
+</html>
