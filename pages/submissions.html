@@ -1507,12 +1507,23 @@
                             </td>
 
                             <td>
-                                <button
-    class="action-btn"
-    onclick="editSubmission('${submission.id}')"
->
-    Edit
-</button>
+          <div style="display:flex; gap:6px;">
+
+    <button
+        class="action-btn"
+        onclick="editSubmission('${submission.id}')"
+    >
+        Edit
+    </button>
+
+    <button
+        class="action-btn"
+        onclick="deleteSubmission('${submission.id}')"
+    >
+        Delete
+    </button>
+
+</div>
                             </td>
 
                         </tr>
@@ -1587,7 +1598,42 @@ function editSubmission(id) {
         submissions.find(function(item) {
             return item.id === id;
         });
+/* =========================
+   DELETE SUBMISSION
+========================= */
 
+function deleteSubmission(id) {
+
+    const submission = submissions.find(function(item) {
+        return item.id === id;
+    });
+
+    if (!submission) {
+        return;
+    }
+
+    const confirmed = confirm(
+        "Are you sure you want to delete " +
+        submission.id +
+        " for " +
+        submission.candidate +
+        "?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    submissions = submissions.filter(function(item) {
+        return item.id !== id;
+    });
+
+    saveToLocalStorage();
+
+    renderTable();
+
+    updateStatistics();
+}
     if (!submission) {
         return;
     }
