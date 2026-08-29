@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hirevis ATS - Submissions</title>
+
+    <style>
+        :root {
+            --orange: #F28C28;
+            --green: #5B8C2A;
+            --dark: #172018;
+            --muted: #6b756d;
+            --bg: #f5f7f4;
+            --white: #ffffff;
+            --border: #e4e8e3;
+            --shadow: 0 8px 25px rgba(23, 32, 24, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: var(--dark);
+            color: white;
+            padding: 24px 16px;
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 8px 12px 25px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 18px;
+        }
+
+        .brand-name {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--orange);
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #b7c0b8;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #849087;
+            padding: 12px;
+            letter-spacing: 1px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin: 3px 0;
+            border-radius: 8px;
+            color: #dce2dd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.08);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--orange);
+            color: white;
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 245px;
+            min-height: 100vh;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .page-subtitle {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .add-btn {
+            border: none;
+            background: var(--orange);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-btn:hover {
+            opacity: 0.9;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .orange {
+            color: var(--orange);
+        }
+
+        .green {
+            color: var(--green);
+        }
+
+        /* CONTENT CARD */
+
+        .content-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search {
+            flex: 1;
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .filter {
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            background: white;
+            font-size: 14px;
+        }
+
+        /* TABLE */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            background: #f8faf7;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        td {
+            padding: 15px 16px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        tr:hover td {
+            background: #fbfcfa;
+        }
+
+        .candidate-name {
+            font-weight: 700;
+        }
+
+        .sub-id {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-review {
+            background: #fff2df;
+            color: #b76500;
+        }
+
+        .badge-shortlisted {
+            background: #eef7e8;
+            color: #4f7d24;
+        }
+
+        .badge-interview {
+            background: #eaf3ff;
+            color: #2364a0;
+        }
+
+        .badge-selected {
+            background: #e6f6ed;
+            color: #287a4d;
+        }
+
+        .badge-rejected {
+            background: #fdeaea;
+            color: #b33a3a;
+        }
+
+        .badge-hold {
+            background: #f1efff;
+            color: #6255a5;
+        }
+
+        .action-btn {
+            border: 1px solid var(--border);
+            background: white;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        /* MODAL */
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .close {
+            border: none;
+            background: #f1f3f1;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #49524b;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--orange);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .cancel-btn {
+            border: 1px solid var(--border);
+            background: white;
+            padding: 11px 18px;
+            border-radius: 7px;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            border: none;
+            background: var(--green);
+            color: white;
+            padding: 11px 20px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            text-align: center;
+            padding: 45px 20px;
+            color: var(--muted);
+        }
+
+        .empty-icon {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 75px;
+                padding: 20px 8px;
+            }
+
+            .brand-name,
+            .brand-subtitle,
+            .section-title,
+            .nav-item span:not(.nav-icon) {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 75px;
+                padding: 18px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-name">Hirevis</div>
+        <div class="brand-subtitle">RECRUITMENT REDEFINED</div>
+    </div>
+
+    <div class="section-title">Main</div>
+
+    <a class="nav-item" href="../index.html">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a class="nav-item" href="candidates.html">
+        <span class="nav-icon">👤</span>
+        <span>Candidates</span>
+    </a>
+
+    <a class="nav-item" href="clients.html">
+        <span class="nav-icon">🏢</span>
+        <span>Clients</span>
+    </a>
+
+    <a class="nav-item" href="requirements.html">
+        <span class="nav-icon">📋</span>
+        <span>Requirements</span>
+    </a>
+
+    <a class="nav-item active" href="submissions.html">
+        <span class="nav-icon">📤</span>
+        <span>Submissions</span>
+    </a>
+
+    <div class="section-title">Recruitment</div>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">📅</span>
+        <span>Interviews</span>
+    </a>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">🔔</span>
+        <span>Follow-ups</span>
+    </a>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">💼</span>
+        <span>Offers</span>
+    </a>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">✅</span>
+        <span>Joinings</span>
+    </a>
+
+    <div class="section-title">Management</div>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">📈</span>
+        <span>Reports</span>
+    </a>
+
+    <a class="nav-item" href="#">
+        <span class="nav-icon">⚙️</span>
+        <span>Settings</span>
+    </a>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+            <div class="page-title">Submissions</div>
+            <div class="page-subtitle">
+                Track candidate submissions from CV sharing to final outcome.
+            </div>
+        </div>
+
+        <button class="add-btn" onclick="openModal()">
+            + Add Submission
+        </button>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-label">Total Submissions</div>
+            <div class="stat-number orange" id="totalCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Client Review</div>
+            <div class="stat-number" id="reviewCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Interviews</div>
+            <div class="stat-number" id="interviewCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Selected</div>
+            <div class="stat-number green" id="selectedCount">0</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Rejected</div>
+            <div class="stat-number" id="rejectedCount">0</div>
+        </div>
+
+    </section>
+
+
+    <!-- TABLE -->
+
+    <section class="content-card">
+
+        <div class="toolbar">
+
+            <input
+                type="text"
+                id="searchInput"
+                class="search"
+                placeholder="Search candidate, client, position or submission ID..."
+                oninput="renderTable()"
+            >
+
+            <select
+                id="stageFilter"
+                class="filter"
+                onchange="renderTable()"
+            >
+                <option value="">All Stages</option>
+                <option value="CV Sent to Client">CV Sent to Client</option>
+                <option value="Client Review">Client Review</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Interview Scheduled">Interview Scheduled</option>
+                <option value="Interviewed">Interviewed</option>
+                <option value="Selected">Selected</option>
+                <option value="Offer">Offer</option>
+                <option value="Joined">Joined</option>
+                <option value="Rejected">Rejected</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Withdrawn">Withdrawn</option>
+            </select>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Submission</th>
+                        <th>Candidate</th>
+                        <th>Client</th>
+                        <th>Position</th>
+                        <th>Recruiter</th>
+                        <th>Stage</th>
+                        <th>Submission Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="submissionTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ADD SUBMISSION MODAL -->
+
+<div class="modal" id="submissionModal">
+
+    <div class="modal-box">
+
+        <div class="modal-header">
+
+            <div class="modal-title">
+                Add Submission
+            </div>
+
+            <button class="close" onclick="closeModal()">×</button>
+
+        </div>
+
+
+        <form id="submissionForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Candidate Name *</label>
+                    <input
+                        type="text"
+                        id="candidateName"
+                        required
+                        placeholder="Enter candidate name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Client Name *</label>
+                    <input
+                        type="text"
+                        id="clientName"
+                        required
+                        placeholder="Enter client name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Position *</label>
+                    <input
+                        type="text"
+                        id="position"
+                        required
+                        placeholder="Enter position"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Recruiter *</label>
+                    <input
+                        type="text"
+                        id="recruiter"
+                        required
+                        placeholder="Enter recruiter name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Submission Date *</label>
+                    <input
+                        type="date"
+                        id="submissionDate"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label>Current Stage *</label>
+
+                    <select id="stage" required>
+
+                        <option value="">
+                            Select Stage
+                        </option>
+
+                        <option value="CV Sent to Client">
+                            CV Sent to Client
+                        </option>
+
+                        <option value="Client Review">
+                            Client Review
+                        </option>
+
+                        <option value="Shortlisted">
+                            Shortlisted
+                        </option>
+
+                        <option value="Interview Scheduled">
+                            Interview Scheduled
+                        </option>
+
+                        <option value="Interviewed">
+                            Interviewed
+                        </option>
+
+                        <option value="Selected">
+                            Selected
+                        </option>
+
+                        <option value="Offer">
+                            Offer
+                        </option>
+
+                        <option value="Joined">
+                            Joined
+                        </option>
+
+                        <option value="Rejected">
+                            Rejected
+                        </option>
+
+                        <option value="On Hold">
+                            On Hold
+                        </option>
+
+                        <option value="Withdrawn">
+                            Withdrawn
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Client Feedback</label>
+
+                    <textarea
+                        id="feedback"
+                        placeholder="Enter client feedback..."
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Remarks</label>
+
+                    <textarea
+                        id="remarks"
+                        placeholder="Enter additional remarks..."
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="save-btn"
+                >
+                    Save Submission
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* SAMPLE DATA
+       Temporary only.
+       Database will be connected later.
+    */
+
+    let submissions = [
+
+        {
+            id: "HV-SUB-000001",
+            candidate: "Amit Sharma",
+            client: "ABC Technologies",
+            position: "Project Manager",
+            recruiter: "Recruiter 1",
+            stage: "Client Review",
+            date: "2026-08-25",
+            feedback: "CV under client review",
+            remarks: ""
+        },
+
+        {
+            id: "HV-SUB-000002",
+            candidate: "Priya Singh",
+            client: "XYZ Industries",
+            position: "HR Manager",
+            recruiter: "Recruiter 2",
+            stage: "Interview Scheduled",
+            date: "2026-08-26",
+            feedback: "Interview scheduled",
+            remarks: ""
+        },
+
+        {
+            id: "HV-SUB-000003",
+            candidate: "Rahul Verma",
+            client: "Global Solutions",
+            position: "Operations Manager",
+            recruiter: "Recruiter 1",
+            stage: "Selected",
+            date: "2026-08-27",
+            feedback: "Selected by client",
+            remarks: ""
+        },
+
+        {
+            id: "HV-SUB-000004",
+            candidate: "Neha Patel",
+            client: "Smart Infra",
+            position: "Site Engineer",
+            recruiter: "Recruiter 3",
+            stage: "Rejected",
+            date: "2026-08-28",
+            feedback: "Profile not suitable",
+            remarks: ""
+        }
+
+    ];
+
+
+    function getBadgeClass(stage) {
+
+        if (stage === "Client Review") {
+            return "badge-review";
+        }
+
+        if (stage === "Shortlisted") {
+            return "badge-shortlisted";
+        }
+
+        if (
+            stage === "Interview Scheduled" ||
+            stage === "Interviewed"
+        ) {
+            return "badge-interview";
+        }
+
+        if (
+            stage === "Selected" ||
+            stage === "Offer" ||
+            stage === "Joined"
+        ) {
+            return "badge-selected";
+        }
+
+        if (stage === "Rejected") {
+            return "badge-rejected";
+        }
+
+        if (
+            stage === "On Hold" ||
+            stage === "Withdrawn"
+        ) {
+            return "badge-hold";
+        }
+
+        return "badge-review";
+    }
+
+
+    function renderTable() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase();
+
+        const stage =
+            document
+                .getElementById("stageFilter")
+                .value;
+
+
+        const filtered = submissions.filter(item => {
+
+            const searchable =
+                (
+                    item.id +
+                    " " +
+                    item.candidate +
+                    " " +
+                    item.client +
+                    " " +
+                    item.position +
+                    " " +
+                    item.recruiter
+                ).toLowerCase();
+
+            const matchesSearch =
+                searchable.includes(search);
+
+            const matchesStage =
+                !stage ||
+                item.stage === stage;
+
+            return matchesSearch && matchesStage;
+
+        });
+
+
+        const table =
+            document.getElementById("submissionTable");
+
+
+        if (filtered.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="8">
+                        <div class="empty">
+                            <div class="empty-icon">📤</div>
+                            <div>No submissions found.</div>
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        table.innerHTML =
+            filtered.map(item => `
+
+                <tr>
+
+                    <td>
+                        <div class="candidate-name">
+                            ${item.id}
+                        </div>
+
+                        <div class="sub-id">
+                            Submission ID
+                        </div>
+                    </td>
+
+
+                    <td>
+                        <div class="candidate-name">
+                            ${item.candidate}
+                        </div>
+                    </td>
+
+
+                    <td>
+                        ${item.client}
+                    </td>
+
+
+                    <td>
+                        ${item.position}
+                    </td>
+
+
+                    <td>
+                        ${item.recruiter}
+                    </td>
+
+
+                    <td>
+                        <span class="badge ${getBadgeClass(item.stage)}">
+                            ${item.stage}
+                        </span>
+                    </td>
+
+
+                    <td>
+                        ${item.date}
+                    </td>
+
+
+                    <td>
+
+                        <button
+                            class="action-btn"
+                            onclick="viewSubmission('${item.id}')"
+                        >
+                            View
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `).join("");
+
+    }
+
+
+    function updateStats() {
+
+        document.getElementById("totalCount").textContent =
+            submissions.length;
+
+        document.getElementById("reviewCount").textContent =
+            submissions.filter(
+                item => item.stage === "Client Review"
+            ).length;
+
+        document.getElementById("interviewCount").textContent =
+            submissions.filter(
+                item =>
+                    item.stage === "Interview Scheduled" ||
+                    item.stage === "Interviewed"
+            ).length;
+
+        document.getElementById("selectedCount").textContent =
+            submissions.filter(
+                item =>
+                    item.stage === "Selected" ||
+                    item.stage === "Offer" ||
+                    item.stage === "Joined"
+            ).length;
+
+        document.getElementById("rejectedCount").textContent =
+            submissions.filter(
+                item => item.stage === "Rejected"
+            ).length;
+
+    }
+
+
+    function openModal() {
+
+        document
+            .getElementById("submissionModal")
+            .classList.add("show");
+
+        document
+            .getElementById("submissionDate")
+            .value =
+            new Date()
+                .toISOString()
+                .split("T")[0];
+
+    }
+
+
+    function closeModal() {
+
+        document
+            .getElementById("submissionModal")
+            .classList.remove("show");
+
+    }
+
+
+    function generateSubmissionId() {
+
+        const number =
+            submissions.length + 1;
+
+        return (
+            "HV-SUB-" +
+            String(number).padStart(6, "0")
+        );
+
+    }
+
+
+    document
+        .getElementById("submissionForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+
+            const newSubmission = {
+
+                id: generateSubmissionId(),
+
+                candidate:
+                    document
+                        .getElementById("candidateName")
+                        .value,
+
+                client:
+                    document
+                        .getElementById("clientName")
+                        .value,
+
+                position:
+                    document
+                        .getElementById("position")
+                        .value,
+
+                recruiter:
+                    document
+                        .getElementById("recruiter")
+                        .value,
+
+                date:
+                    document
+                        .getElementById("submissionDate")
+                        .value,
+
+                stage:
+                    document
+                        .getElementById("stage")
+                        .value,
+
+                feedback:
+                    document
+                        .getElementById("feedback")
+                        .value,
+
+                remarks:
+                    document
+                        .getElementById("remarks")
+                        .value
+
+            };
+
+
+            submissions.unshift(newSubmission);
+
+            updateStats();
+
+            renderTable();
+
+            this.reset();
+
+            closeModal();
+
+        });
+
+
+    function viewSubmission(id) {
+
+        const item =
+            submissions.find(
+                submission =>
+                    submission.id === id
+            );
+
+
+        if (!item) {
+            return;
+        }
+
+
+        alert(
+            "Submission ID: " + item.id +
+            "\n\nCandidate: " + item.candidate +
+            "\nClient: " + item.client +
+            "\nPosition: " + item.position +
+            "\nRecruiter: " + item.recruiter +
+            "\nStage: " + item.stage +
+            "\nSubmission Date: " + item.date +
+            "\n\nClient Feedback: " +
+            (item.feedback || "No feedback") +
+            "\n\nRemarks: " +
+            (item.remarks || "No remarks")
+        );
+
+    }
+
+
+    /* INITIAL LOAD */
+
+    updateStats();
+
+    renderTable();
+
+</script>
+
+</body>
+</html>
