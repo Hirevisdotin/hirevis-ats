@@ -1009,6 +1009,7 @@
            TEMPORARY SAMPLE DATA
            ========================= */
 
+        let editingSubmissionId = null;
         let submissions = [
             {
                 id: "HV-SUB-000001",
@@ -1273,7 +1274,24 @@
             };
 
 
-            submissions.unshift(newSubmission);
+            if (editingSubmissionId) {
+
+    const index = submissions.findIndex(function(item) {
+        return item.id === editingSubmissionId;
+    });
+
+    if (index !== -1) {
+        newSubmission.id = editingSubmissionId;
+        submissions[index] = newSubmission;
+    }
+
+    editingSubmissionId = null;
+
+} else {
+
+    submissions.unshift(newSubmission);
+
+}
 
             saveToLocalStorage();
 
@@ -1490,11 +1508,11 @@
 
                             <td>
                                 <button
-                                    class="action-btn"
-                                    onclick="viewSubmission('${submission.id}')"
-                                >
-                                    View
-                                </button>
+    class="action-btn"
+    onclick="editSubmission('${submission.id}')"
+>
+    Edit
+</button>
                             </td>
 
                         </tr>
@@ -1559,6 +1577,49 @@
             );
 
         }
+/* =========================
+   EDIT SUBMISSION
+========================= */
+
+function editSubmission(id) {
+    editingSubmissionId = id;
+    const submission =
+        submissions.find(function(item) {
+            return item.id === id;
+        });
+
+    if (!submission) {
+        return;
+    }
+
+    document.getElementById("candidateName").value =
+        submission.candidate || "";
+
+    document.getElementById("clientName").value =
+        submission.client || "";
+
+    document.getElementById("position").value =
+        submission.position || "";
+
+    document.getElementById("recruiter").value =
+        submission.recruiter || "";
+
+    document.getElementById("submissionDate").value =
+        submission.date || "";
+
+    document.getElementById("currentStage").value =
+        submission.stage || "CV Sent to Client";
+
+    document.getElementById("clientFeedback").value =
+        submission.feedback || "";
+
+    document.getElementById("remarks").value =
+        submission.remarks || "";
+
+    document
+        .getElementById("submissionModal")
+        .classList.add("show");
+}
 
 
         /* =========================
