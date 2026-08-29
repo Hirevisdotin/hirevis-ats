@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hirevis ATS - Clients</title>
+
+    <style>
+        :root {
+            --orange: #F28C28;
+            --green: #5B8C2A;
+            --dark: #172018;
+            --muted: #6b756d;
+            --bg: #f5f7f4;
+            --white: #ffffff;
+            --border: #e4e8e3;
+            --shadow: 0 8px 25px rgba(23, 32, 24, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--bg);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--dark);
+            color: white;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 10px 28px;
+        }
+
+        .brand-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--orange), var(--green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 18px;
+        }
+
+        .brand-text span {
+            font-size: 11px;
+            color: #b7c0b9;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8f9b91;
+            padding: 0 12px 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #dce3dd;
+            text-decoration: none;
+            padding: 11px 12px;
+            border-radius: 9px;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.07);
+        }
+
+        .nav-item.active {
+            background: rgba(242, 140, 40, 0.16);
+            color: white;
+            border-left: 3px solid var(--orange);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 30px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 12px 18px;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(242, 140, 40, 0.2);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.92;
+        }
+
+        .btn-secondary {
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--dark);
+            border-radius: 9px;
+            padding: 11px 17px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           STATS
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .stat-note {
+            margin-top: 7px;
+            font-size: 12px;
+            color: var(--green);
+        }
+
+        /* =========================
+           PANEL / FILTERS
+        ========================= */
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .filter-area {
+            padding: 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            padding: 11px 12px;
+            background: white;
+            color: var(--dark);
+            outline: none;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(242, 140, 40, 0.1);
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--muted);
+            background: #fafbfa;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 15px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background: #fcfdfc;
+        }
+
+        .client-name {
+            font-weight: 700;
+        }
+
+        .client-id {
+            display: block;
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .status {
+            display: inline-flex;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: #edf6e8;
+            color: var(--green);
+        }
+
+        .status-inactive {
+            background: #eeeeee;
+            color: #666;
+        }
+
+        .action-btn {
+            border: 1px solid var(--border);
+            background: white;
+            padding: 7px 10px;
+            border-radius: 7px;
+            font-size: 12px;
+        }
+
+        .action-btn:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+        }
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.48);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            width: 100%;
+            max-width: 780px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 21px;
+        }
+
+        .close-btn {
+            border: none;
+            background: #f3f4f3;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            font-size: 20px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #4f5951;
+        }
+
+        .modal-footer {
+            padding: 18px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 45px 20px;
+            color: var(--muted);
+            display: none;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .sidebar {
+                width: 70px;
+                padding: 18px 8px;
+            }
+
+            .brand {
+                justify-content: center;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .brand-text,
+            .nav-title,
+            .nav-item span:not(.nav-icon) {
+                display: none;
+            }
+
+            .nav-item {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 18px;
+            }
+
+            .topbar {
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                H
+            </div>
+
+            <div class="brand-text">
+                <strong>Hirevis</strong>
+                <span>Recruitment Redefined</span>
+            </div>
+
+        </div>
+
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Main
+            </div>
+
+            <a class="nav-item" href="../index.html">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="nav-item" href="candidates.html">
+                <span class="nav-icon">👤</span>
+                <span>Candidates</span>
+            </a>
+
+            <a class="nav-item active" href="clients.html">
+                <span class="nav-icon">🏢</span>
+                <span>Clients</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📋</span>
+                <span>Requirements</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📤</span>
+                <span>Submissions</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📅</span>
+                <span>Interviews</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">🔔</span>
+                <span>Follow-ups</span>
+            </a>
+
+        </div>
+
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Hiring
+            </div>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">💼</span>
+                <span>Offers</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">✅</span>
+                <span>Joinings</span>
+            </a>
+
+            <a class="nav-item" href="#">
+                <span class="nav-icon">📈</span>
+                <span>Reports</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="page-title">
+
+                <h1>Clients</h1>
+
+                <p>
+                    Manage Hirevis clients, contacts and recruitment relationships.
+                </p>
+
+            </div>
+
+
+            <button
+                class="btn-primary"
+                onclick="openClientModal()"
+            >
+                + Add Client
+            </button>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Total Clients
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="totalClients"
+                >
+                    5
+                </div>
+
+                <div class="stat-note">
+                    Client database
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Active Clients
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="activeClients"
+                >
+                    4
+                </div>
+
+                <div class="stat-note">
+                    Currently active
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Open Requirements
+                </div>
+
+                <div class="stat-value">
+                    12
+                </div>
+
+                <div class="stat-note">
+                    Across all clients
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Hiring Partners
+                </div>
+
+                <div class="stat-value">
+                    4
+                </div>
+
+                <div class="stat-note">
+                    Active relationships
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CLIENT TABLE -->
+
+        <section class="panel">
+
+            <div class="filter-area">
+
+                <div class="filter-row">
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="input"
+                        placeholder="🔍 Search client, contact, email, location..."
+                        oninput="filterClients()"
+                    >
+
+
+                    <select
+                        id="industryFilter"
+                        class="select"
+                        onchange="filterClients()"
+                    >
+
+                        <option value="">
+                            All Industries
+                        </option>
+
+                        <option value="Technology">
+                            Technology
+                        </option>
+
+                        <option value="Manufacturing">
+                            Manufacturing
+                        </option>
+
+                        <option value="Infrastructure">
+                            Infrastructure
+                        </option>
+
+                        <option value="Consulting">
+                            Consulting
+                        </option>
+
+                        <option value="Healthcare">
+                            Healthcare
+                        </option>
+
+                    </select>
+
+
+                    <select
+                        id="statusFilter"
+                        class="select"
+                        onchange="filterClients()"
+                    >
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="Active">
+                            Active
+                        </option>
+
+                        <option value="Inactive">
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Client
+                            </th>
+
+                            <th>
+                                Contact Person
+                            </th>
+
+                            <th>
+                                Contact
+                            </th>
+
+                            <th>
+                                Location
+                            </th>
+
+                            <th>
+                                Industry
+                            </th>
+
+                            <th>
+                                Requirements
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="clientTableBody"></tbody>
+
+                </table>
+
+
+                <div
+                    id="noResults"
+                    class="no-results"
+                >
+                    No clients found matching your search.
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ADD CLIENT MODAL -->
+
+<div
+    id="clientModal"
+    class="modal-overlay"
+>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <h2>
+                Add Client
+            </h2>
+
+            <button
+                class="close-btn"
+                onclick="closeClientModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form
+            id="clientForm"
+            onsubmit="saveClient(event)"
+        >
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Client Name *
+                        </label>
+
+                        <input
+                            id="clientName"
+                            class="input"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Contact Person *
+                        </label>
+
+                        <input
+                            id="contactPerson"
+                            class="input"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Contact Number *
+                        </label>
+
+                        <input
+                            id="contactNumber"
+                            class="input"
+                            type="tel"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email ID *
+                        </label>
+
+                        <input
+                            id="clientEmail"
+                            class="input"
+                            type="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Location
+                        </label>
+
+                        <input
+                            id="clientLocation"
+                            class="input"
+                            placeholder="City / State"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Industry
+                        </label>
+
+                        <select
+                            id="clientIndustry"
+                            class="select"
+                        >
+
+                            <option value="Technology">
+                                Technology
+                            </option>
+
+                            <option value="Manufacturing">
+                                Manufacturing
+                            </option>
+
+                            <option value="Infrastructure">
+                                Infrastructure
+                            </option>
+
+                            <option value="Consulting">
+                                Consulting
+                            </option>
+
+                            <option value="Healthcare">
+                                Healthcare
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select
+                            id="clientStatus"
+                            class="select"
+                        >
+
+                            <option value="Active">
+                                Active
+                            </option>
+
+                            <option value="Inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Date Added
+                        </label>
+
+                        <input
+                            id="clientDate"
+                            class="input"
+                            type="date"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group full">
+
+                        <label>
+                            Remarks
+                        </label>
+
+                        <textarea
+                            id="clientRemarks"
+                            class="input"
+                            rows="4"
+                            placeholder="Add client notes..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="closeClientModal()"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                >
+                    Save Client
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    /* =========================
+       TEMPORARY CLIENT DATA
+    ========================= */
+
+    let clients = [
+
+        {
+            id: "HV-CLI-000001",
+            name: "ABC Technologies",
+            contactPerson: "Rahul Mehta",
+            phone: "9876500001",
+            email: "rahul@abctech.example",
+            location: "Delhi",
+            industry: "Technology",
+            requirements: 4,
+            status: "Active"
+        },
+
+        {
+            id: "HV-CLI-000002",
+            name: "Global Infrastructure Ltd",
+            contactPerson: "Anita Sharma",
+            phone: "9876500002",
+            email: "anita@globalinfra.example",
+            location: "Mumbai",
+            industry: "Infrastructure",
+            requirements: 3,
+            status: "Active"
+        },
+
+        {
+            id: "HV-CLI-000003",
+            name: "Prime Manufacturing",
+            contactPerson: "Suresh Kumar",
+            phone: "9876500003",
+            email: "suresh@primemfg.example",
+            location: "Pune",
+            industry: "Manufacturing",
+            requirements: 2,
+            status: "Active"
+        },
+
+        {
+            id: "HV-CLI-000004",
+            name: "NextGen Consulting",
+            contactPerson: "Priya Kapoor",
+            phone: "9876500004",
+            email: "priya@nextgen.example",
+            location: "Bengaluru",
+            industry: "Consulting",
+            requirements: 3,
+            status: "Active"
+        },
+
+        {
+            id: "HV-CLI-000005",
+            name: "Care Health Services",
+            contactPerson: "Vikram Singh",
+            phone: "9876500005",
+            email: "vikram@carehealth.example",
+            location: "Delhi",
+            industry: "Healthcare",
+            requirements: 0,
+            status: "Inactive"
+        }
+
+    ];
+
+
+    /* =========================
+       RENDER CLIENTS
+    ========================= */
+
+    function renderClients(list = clients) {
+
+        const tableBody =
+            document.getElementById("clientTableBody");
+
+        const noResults =
+            document.getElementById("noResults");
+
+        tableBody.innerHTML = "";
+
+
+        if (list.length === 0) {
+
+            noResults.style.display = "block";
+
+            updateStats();
+
+            return;
+        }
+
+
+        noResults.style.display = "none";
+
+
+        list.forEach(client => {
+
+            const row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <span class="client-name">
+                        ${escapeHtml(client.name)}
+                    </span>
+
+                    <span class="client-id">
+                        ${escapeHtml(client.id)}
+                    </span>
+
+                </td>
+
+
+                <td>
+                    ${escapeHtml(client.contactPerson)}
+                </td>
+
+
+                <td>
+
+                    ${escapeHtml(client.phone)}
+
+                    <br>
+
+                    <span
+                        style="
+                            color:#6b756d;
+                            font-size:11px;
+                        "
+                    >
+                        ${escapeHtml(client.email)}
+                    </span>
+
+                </td>
+
+
+                <td>
+                    ${escapeHtml(client.location || "-")}
+                </td>
+
+
+                <td>
+                    ${escapeHtml(client.industry || "-")}
+                </td>
+
+
+                <td>
+                    ${escapeHtml(client.requirements)}
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="status ${
+                            client.status === "Active"
+                                ? "status-active"
+                                : "status-inactive"
+                        }"
+                    >
+                        ${escapeHtml(client.status)}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="action-btn"
+                        onclick="viewClient('${client.id}')"
+                    >
+                        View
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tableBody.appendChild(row);
+
+        });
+
+
+        updateStats();
+    }
+
+
+    /* =========================
+       SEARCH + FILTER
+    ========================= */
+
+    function filterClients() {
+
+        const search =
+            document
+                .getElementById("searchInput")
+                .value
+                .toLowerCase()
+                .trim();
+
+
+        const industry =
+            document
+                .getElementById("industryFilter")
+                .value;
+
+
+        const status =
+            document
+                .getElementById("statusFilter")
+                .value;
+
+
+        const filtered =
+            clients.filter(client => {
+
+
+                const searchableText = [
+
+                    client.name,
+                    client.id,
+                    client.contactPerson,
+                    client.phone,
+                    client.email,
+                    client.location,
+                    client.industry
+
+                ]
+                .join(" ")
+                .toLowerCase();
+
+
+                const matchesSearch =
+                    !search ||
+                    searchableText.includes(search);
+
+
+                const matchesIndustry =
+                    !industry ||
+                    client.industry === industry;
+
+
+                const matchesStatus =
+                    !status ||
+                    client.status === status;
+
+
+                return (
+                    matchesSearch &&
+                    matchesIndustry &&
+                    matchesStatus
+                );
+
+            });
+
+
+        renderClients(filtered);
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    function openClientModal() {
+
+        document
+            .getElementById("clientModal")
+            .classList.add("show");
+
+
+        const dateField =
+            document.getElementById("clientDate");
+
+
+        if (!dateField.value) {
+
+            dateField.value =
+                new Date()
+                    .toISOString()
+                    .split("T")[0];
+
+        }
+
+
+        document
+            .getElementById("clientName")
+            .focus();
+    }
+
+
+    function closeClientModal() {
+
+        document
+            .getElementById("clientModal")
+            .classList.remove("show");
+
+
+        document
+            .getElementById("clientForm")
+            .reset();
+    }
+
+
+    /* =========================
+       SAVE CLIENT
+    ========================= */
+
+    function saveClient(event) {
+
+        event.preventDefault();
+
+
+        const name =
+            document
+                .getElementById("clientName")
+                .value
+                .trim();
+
+
+        const phone =
+            document
+                .getElementById("contactNumber")
+                .value
+                .trim();
+
+
+        const email =
+            document
+                .getElementById("clientEmail")
+                .value
+                .trim();
+
+
+        /*
+         * Basic duplicate protection.
+         *
+         * Later this will be enforced by
+         * the database.
+         */
+
+        const duplicate =
+            clients.some(client =>
+
+                client.phone === phone ||
+                client.email.toLowerCase() === email.toLowerCase()
+
+            );
+
+
+        if (duplicate) {
+
+            alert(
+                "Possible duplicate client detected. " +
+                "A client with the same phone number or email already exists."
+            );
+
+            return;
+        }
+
+
+        const nextNumber =
+            clients.length + 1;
+
+
+        const client = {
+
+            id:
+                "HV-CLI-" +
+                String(nextNumber)
+                    .padStart(6, "0"),
+
+
+            name: name,
+
+
+            contactPerson:
+                document
+                    .getElementById("contactPerson")
+                    .value
+                    .trim(),
+
+
+            phone: phone,
+
+
+            email: email,
+
+
+            location:
+                document
+                    .getElementById("clientLocation")
+                    .value
+                    .trim(),
+
+
+            industry:
+                document
+                    .getElementById("clientIndustry")
+                    .value,
+
+
+            status:
+                document
+                    .getElementById("clientStatus")
+                    .value,
+
+
+            requirements: 0,
+
+
+            dateAdded:
+                document
+                    .getElementById("clientDate")
+                    .value,
+
+
+            remarks:
+                document
+                    .getElementById("clientRemarks")
+                    .value
+                    .trim()
+
+        };
+
+
+        clients.unshift(client);
+
+
+        renderClients();
+
+
+        closeClientModal();
+
+
+        alert(
+            "Client added successfully.\n\n" +
+            "Client ID: " +
+            client.id
+        );
+    }
+
+
+    /* =========================
+       VIEW CLIENT
+    ========================= */
+
+    function viewClient(id) {
+
+        const client =
+            clients.find(
+                item => item.id === id
+            );
+
+
+        if (!client) {
+            return;
+        }
+
+
+        alert(
+
+            "Client Profile\n\n" +
+
+            "Client ID: " +
+            client.id +
+
+            "\nClient: " +
+            client.name +
+
+            "\nContact Person: " +
+            client.contactPerson +
+
+            "\nPhone: " +
+            client.phone +
+
+            "\nEmail: " +
+            client.email +
+
+            "\nLocation: " +
+            (client.location || "-") +
+
+            "\nIndustry: " +
+            (client.industry || "-") +
+
+            "\nRequirements: " +
+            client.requirements +
+
+            "\nStatus: " +
+            client.status
+
+        );
+    }
+
+
+    /* =========================
+       STATISTICS
+    ========================= */
+
+    function updateStats() {
+
+        document
+            .getElementById("totalClients")
+            .textContent =
+                clients.length;
+
+
+        document
+            .getElementById("activeClients")
+            .textContent =
+                clients.filter(
+                    client =>
+                        client.status === "Active"
+                ).length;
+
+    }
+
+
+    /* =========================
+       SECURITY HELPER
+    ========================= */
+
+    function escapeHtml(value) {
+
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+
+    /* =========================
+       CLOSE MODAL
+    ========================= */
+
+    document
+        .getElementById("clientModal")
+        .addEventListener(
+            "click",
+            function(event) {
+
+                if (event.target === this) {
+                    closeClientModal();
+                }
+
+            }
+        );
+
+
+    /* =========================
+       INITIAL LOAD
+    ========================= */
+
+    renderClients();
+
+</script>
+
+</body>
+</html>
