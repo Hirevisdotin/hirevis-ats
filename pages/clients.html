@@ -1255,11 +1255,19 @@
                 <td>
 
                     <button
-                        class="action-btn"
-                        onclick="viewClient('${client.id}')"
-                    >
-                        View
-                    </button>
+    class="action-btn"
+    onclick="viewClient('${client.id}')"
+>
+    View
+</button>
+
+<button
+    class="action-btn"
+    style="color:#c0392b;border-color:#f0d2ce;margin-left:6px;"
+    onclick="deleteClient('${client.id}')"
+>
+    Delete
+</button>
 
                 </td>
 
@@ -1530,7 +1538,41 @@
         );
     }
 
+/* =========================
+   DELETE CLIENT
+========================= */
 
+function deleteClient(id) {
+
+    const client =
+        clients.find(
+            item => item.id === id
+        );
+
+    if (!client) {
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this client?\n\n" +
+            "Client: " + client.name + "\n" +
+            "Client ID: " + client.id
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    clients =
+        clients.filter(
+            item => item.id !== id
+        );
+
+    renderClients();
+
+    alert("Client deleted successfully.");
+}
     /* =========================
        VIEW CLIENT
     ========================= */
