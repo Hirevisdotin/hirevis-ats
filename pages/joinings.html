@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hirevis ATS - Joinings</title>
+
+<style>
+:root{
+    --orange:#F28C28;
+    --green:#5B8C2A;
+    --dark:#172018;
+    --muted:#6b756d;
+    --bg:#f5f7f4;
+    --white:#fff;
+    --border:#e4e8e3;
+    --danger:#c0392b;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--dark);
+}
+
+button,input,select,textarea{font:inherit}
+
+button{cursor:pointer}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:250px;
+    background:var(--dark);
+    color:white;
+    padding:24px 16px;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:4px 10px 28px;
+}
+
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--orange),var(--green));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:18px;
+}
+
+.brand-text strong{display:block;font-size:18px}
+.brand-text span{font-size:11px;color:#b7c0b9}
+
+.nav-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#8f9b91;
+    padding:0 12px 8px;
+    margin-top:15px;
+}
+
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#dce3dd;
+    text-decoration:none;
+    padding:11px 12px;
+    border-radius:9px;
+    margin-bottom:3px;
+    font-size:14px;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    background:rgba(242,140,40,.16);
+    color:white;
+}
+
+.nav-icon{width:22px;text-align:center}
+
+.main{
+    margin-left:250px;
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:25px;
+}
+
+h1{font-size:30px;margin-bottom:7px}
+
+.subtitle{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.btn-primary{
+    background:var(--orange);
+    color:white;
+    border:0;
+    border-radius:9px;
+    padding:12px 18px;
+    font-weight:700;
+}
+
+.btn-secondary{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:10px 16px;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+}
+
+.label{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.number{
+    font-size:27px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+}
+
+.filters{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:12px;
+}
+
+.input,.select{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--border);
+    border-radius:9px;
+    outline:none;
+}
+
+.table-wrapper{overflow-x:auto}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1000px;
+}
+
+th{
+    text-align:left;
+    padding:14px 16px;
+    background:#fafbfa;
+    color:var(--muted);
+    font-size:11px;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:15px 16px;
+    border-bottom:1px solid var(--border);
+    font-size:13px;
+}
+
+.status{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.status-joined{
+    background:#e6f4ea;
+    color:#27733b;
+}
+
+.status-pending{
+    background:#fff2df;
+    color:#b76700;
+}
+
+.status-cancelled{
+    background:#fbeaea;
+    color:var(--danger);
+}
+
+.action-btn{
+    border:1px solid var(--border);
+    background:white;
+    padding:7px 10px;
+    border-radius:7px;
+    margin-right:4px;
+}
+
+.action-btn:hover{
+    border-color:var(--orange);
+    color:var(--orange);
+}
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal-overlay.show{display:flex}
+
+.modal{
+    background:white;
+    width:100%;
+    max-width:700px;
+    border-radius:16px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.modal-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+}
+
+.close{
+    border:0;
+    background:#f3f4f3;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    font-size:20px;
+}
+
+.modal-body{padding:24px}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.full{grid-column:1/-1}
+
+.form-group label{
+    font-size:12px;
+    font-weight:700;
+}
+
+.modal-footer{
+    padding:18px 24px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+@media(max-width:900px){
+    .stats{grid-template-columns:1fr 1fr}
+}
+
+@media(max-width:700px){
+    .sidebar{width:70px}
+    .brand-text,.nav-title,.nav-item span:not(.nav-icon){display:none}
+    .main{margin-left:70px}
+    .nav-item{justify-content:center}
+    .form-grid,.filters{grid-template-columns:1fr}
+    .full{grid-column:auto}
+}
+
+@media(max-width:480px){
+    .stats{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">H</div>
+        <div class="brand-text">
+            <strong>Hirevis</strong>
+            <span>Recruitment Redefined</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Main</div>
+
+    <a class="nav-item" href="../index.html">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a class="nav-item" href="candidates.html">
+        <span class="nav-icon">👤</span>
+        <span>Candidates</span>
+    </a>
+
+    <a class="nav-item" href="clients.html">
+        <span class="nav-icon">🏢</span>
+        <span>Clients</span>
+    </a>
+
+    <a class="nav-item" href="requirements.html">
+        <span class="nav-icon">📋</span>
+        <span>Requirements</span>
+    </a>
+
+    <a class="nav-item" href="submissions.html">
+        <span class="nav-icon">📤</span>
+        <span>Submissions</span>
+    </a>
+
+    <a class="nav-item" href="interviews.html">
+        <span class="nav-icon">📅</span>
+        <span>Interviews</span>
+    </a>
+
+    <a class="nav-item" href="followups.html">
+        <span class="nav-icon">🔔</span>
+        <span>Follow-ups</span>
+    </a>
+
+    <div class="nav-title">Hiring</div>
+
+    <a class="nav-item" href="offers.html">
+        <span class="nav-icon">💼</span>
+        <span>Offers</span>
+    </a>
+
+    <a class="nav-item active" href="joinings.html">
+        <span class="nav-icon">✅</span>
+        <span>Joinings</span>
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+            <h1>Joinings</h1>
+            <p class="subtitle">
+                Track candidates who have joined after successful placement.
+            </p>
+        </div>
+
+        <button class="btn-primary" onclick="openModal()">
+            + Add Joining
+        </button>
+
+    </div>
+
+
+    <section class="stats">
+
+        <div class="card">
+            <div class="label">Total Joinings</div>
+            <div class="number" id="totalJoinings">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Joined</div>
+            <div class="number" id="joinedCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Pending</div>
+            <div class="number" id="pendingCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Cancelled</div>
+            <div class="number" id="cancelledCount">0</div>
+        </div>
+
+    </section>
+
+
+    <section class="panel">
+
+        <div class="filters">
+
+            <input
+                id="searchInput"
+                class="input"
+                placeholder="🔍 Search candidate, client or position..."
+                oninput="render()"
+            >
+
+            <select id="statusFilter" class="select" onchange="render()">
+                <option value="">All Status</option>
+                <option value="Joined">Joined</option>
+                <option value="Pending">Pending</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Client</th>
+                        <th>Position</th>
+                        <th>Joining Date</th>
+                        <th>Recruiter</th>
+                        <th>Status</th>
+                        <th>Remarks</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="joiningTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<div id="modal" class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+            <h2 id="modalTitle">Add Joining</h2>
+
+            <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <form onsubmit="saveJoining(event)">
+
+            <div class="modal-body">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Candidate Name *</label>
+                        <input id="candidate" class="input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Client *</label>
+                        <input id="client" class="input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Position *</label>
+                        <input id="position" class="input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Joining Date *</label>
+                        <input id="joiningDate" class="input" type="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Recruiter</label>
+                        <input id="recruiter" class="input">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+
+                        <select id="status" class="select">
+                            <option value="Joined">Joined</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group full">
+                        <label>Remarks</label>
+
+                        <textarea
+                            id="remarks"
+                            class="input"
+                            rows="4"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    onclick="closeModal()"
+                >
+                    Cancel
+                </button>
+
+                <button class="btn-primary">
+                    Save Joining
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let joinings =
+    JSON.parse(
+        localStorage.getItem("hirevisJoinings") || "[]"
+    );
+
+let editingId = null;
+
+
+/* =========================
+   SAVE STORAGE
+========================= */
+
+function saveData(){
+
+    localStorage.setItem(
+        "hirevisJoinings",
+        JSON.stringify(joinings)
+    );
+
+}
+
+
+/* =========================
+   OPEN MODAL
+========================= */
+
+function openModal(){
+
+    editingId = null;
+
+    document.getElementById("modalTitle").textContent =
+        "Add Joining";
+
+    document.querySelector("#modal form").reset();
+
+    document.getElementById("modal")
+        .classList.add("show");
+
+}
+
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeModal(){
+
+    document.getElementById("modal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   SAVE JOINING
+========================= */
+
+function saveJoining(event){
+
+    event.preventDefault();
+
+    const data = {
+
+        candidate:
+            document.getElementById("candidate").value.trim(),
+
+        client:
+            document.getElementById("client").value.trim(),
+
+        position:
+            document.getElementById("position").value.trim(),
+
+        joiningDate:
+            document.getElementById("joiningDate").value,
+
+        recruiter:
+            document.getElementById("recruiter").value.trim(),
+
+        status:
+            document.getElementById("status").value,
+
+        remarks:
+            document.getElementById("remarks").value.trim()
+
+    };
+
+
+    if(editingId){
+
+        const index =
+            joinings.findIndex(
+                item => item.id === editingId
+            );
+
+        if(index !== -1){
+
+            joinings[index] = {
+                ...joinings[index],
+                ...data
+            };
+
+        }
+
+    }else{
+
+        data.id =
+            "HV-JOIN-" +
+            Date.now();
+
+        joinings.unshift(data);
+
+    }
+
+
+    saveData();
+
+    closeModal();
+
+    render();
+
+}
+
+
+/* =========================
+   VIEW
+========================= */
+
+function viewJoining(id){
+
+    const item =
+        joinings.find(
+            joining => joining.id === id
+        );
+
+    if(!item) return;
+
+    alert(
+        "Joining Details\n\n" +
+
+        "Candidate: " + item.candidate + "\n" +
+        "Client: " + item.client + "\n" +
+        "Position: " + item.position + "\n" +
+        "Joining Date: " + item.joiningDate + "\n" +
+        "Recruiter: " + (item.recruiter || "-") + "\n" +
+        "Status: " + item.status + "\n" +
+        "Remarks: " + (item.remarks || "-")
+    );
+
+}
+
+
+/* =========================
+   EDIT
+========================= */
+
+function editJoining(id){
+
+    const item =
+        joinings.find(
+            joining => joining.id === id
+        );
+
+    if(!item) return;
+
+    editingId = id;
+
+    document.getElementById("modalTitle").textContent =
+        "Edit Joining";
+
+    document.getElementById("candidate").value =
+        item.candidate || "";
+
+    document.getElementById("client").value =
+        item.client || "";
+
+    document.getElementById("position").value =
+        item.position || "";
+
+    document.getElementById("joiningDate").value =
+        item.joiningDate || "";
+
+    document.getElementById("recruiter").value =
+        item.recruiter || "";
+
+    document.getElementById("status").value =
+        item.status || "Pending";
+
+    document.getElementById("remarks").value =
+        item.remarks || "";
+
+    document.getElementById("modal")
+        .classList.add("show");
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteJoining(id){
+
+    const item =
+        joinings.find(
+            joining => joining.id === id
+        );
+
+    if(!item) return;
+
+    if(
+        !confirm(
+            "Are you sure you want to delete this joining?"
+        )
+    ){
+
+        return;
+
+    }
+
+    joinings =
+        joinings.filter(
+            joining => joining.id !== id
+        );
+
+    saveData();
+
+    render();
+
+}
+
+
+/* =========================
+   STATUS CLASS
+========================= */
+
+function statusClass(status){
+
+    if(status === "Joined")
+        return "status-joined";
+
+    if(status === "Cancelled")
+        return "status-cancelled";
+
+    return "status-pending";
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+    const search =
+        document.getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const status =
+        document.getElementById("statusFilter")
+            .value;
+
+
+    const filtered =
+        joinings.filter(item => {
+
+            const text =
+                (
+                    item.candidate +
+                    " " +
+                    item.client +
+                    " " +
+                    item.position +
+                    " " +
+                    item.recruiter
+                )
+                .toLowerCase();
+
+            return (
+                (!search || text.includes(search)) &&
+                (!status || item.status === status)
+            );
+
+        });
+
+
+    const table =
+        document.getElementById("joiningTable");
+
+    table.innerHTML = "";
+
+
+    filtered.forEach(item => {
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>${escapeHtml(item.candidate)}</td>
+
+            <td>${escapeHtml(item.client)}</td>
+
+            <td>${escapeHtml(item.position)}</td>
+
+            <td>${escapeHtml(item.joiningDate)}</td>
+
+            <td>${escapeHtml(item.recruiter || "-")}</td>
+
+            <td>
+                <span class="status ${statusClass(item.status)}">
+                    ${escapeHtml(item.status)}
+                </span>
+            </td>
+
+            <td>${escapeHtml(item.remarks || "-")}</td>
+
+            <td>
+
+                <button
+                    class="action-btn"
+                    onclick="viewJoining('${item.id}')"
+                >
+                    View
+                </button>
+
+                <button
+                    class="action-btn"
+                    onclick="editJoining('${item.id}')"
+                >
+                    Edit
+                </button>
+
+                <button
+                    class="action-btn"
+                    onclick="deleteJoining('${item.id}')"
+                >
+                    Delete
+                </button>
+
+            </td>
+
+        `;
+
+        table.appendChild(row);
+
+    });
+
+
+    updateStats();
+
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+function updateStats(){
+
+    document.getElementById("totalJoinings")
+        .textContent = joinings.length;
+
+    document.getElementById("joinedCount")
+        .textContent =
+            joinings.filter(
+                item => item.status === "Joined"
+            ).length;
+
+    document.getElementById("pendingCount")
+        .textContent =
+            joinings.filter(
+                item => item.status === "Pending"
+            ).length;
+
+    document.getElementById("cancelledCount")
+        .textContent =
+            joinings.filter(
+                item => item.status === "Cancelled"
+            ).length;
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   BACKDROP
+========================= */
+
+document.getElementById("modal")
+    .addEventListener("click",function(event){
+
+        if(event.target === this){
+            closeModal();
+        }
+
+    });
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+render();
+
+</script>
+
+</body>
+</html>
