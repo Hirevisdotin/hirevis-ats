@@ -529,6 +529,241 @@
     </section>
 
   </main>
+<script>
 
+/* =========================
+   DASHBOARD LIVE DATA
+========================= */
+
+function getData(key) {
+    try {
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (error) {
+        return [];
+    }
+}
+
+
+/* LOAD DATA */
+
+const candidates =
+    getData("hirevisCandidates");
+
+const requirements =
+    getData("hirevisRequirements");
+
+const submissions =
+    getData("hirevisSubmissions");
+
+const interviews =
+    getData("hirevisInterviews");
+
+const followups =
+    getData("hirevisFollowups");
+
+const offers =
+    getData("hirevisOffers");
+
+
+/* GET DASHBOARD CARDS */
+
+const cards =
+    document.querySelectorAll(".card-number");
+
+
+/* OPEN REQUIREMENTS */
+
+const openRequirements =
+    requirements.filter(function(item) {
+
+        const status =
+            String(item.status || "")
+                .toLowerCase();
+
+        return (
+            status === "open" ||
+            status === "active" ||
+            status === ""
+        );
+
+    }).length;
+
+
+/* ACTIVE CANDIDATES */
+
+const activeCandidates =
+    candidates.filter(function(item) {
+
+        const status =
+            String(item.status || "")
+                .toLowerCase();
+
+        return (
+            status !== "rejected" &&
+            status !== "inactive"
+        );
+
+    }).length;
+
+
+/* SUBMISSIONS */
+
+const totalSubmissions =
+    submissions.length;
+
+
+/* INTERVIEWS */
+
+const totalInterviews =
+    interviews.length;
+
+
+/* SELECTED */
+
+const selected =
+    submissions.filter(function(item) {
+
+        const stage =
+            String(
+                item.stage ||
+                item.status ||
+                ""
+            ).toLowerCase();
+
+        return (
+            stage.includes("selected") ||
+            stage.includes("offer")
+        );
+
+    }).length;
+
+
+/* JOINED */
+
+const joined =
+    offers.filter(function(item) {
+
+        return String(item.status || "")
+            .toLowerCase() === "joined";
+
+    }).length;
+
+
+/* FOLLOW-UPS DUE */
+
+const today =
+    new Date();
+
+today.setHours(0, 0, 0, 0);
+
+const followupsDue =
+    followups.filter(function(item) {
+
+        const status =
+            String(item.status || "")
+                .toLowerCase();
+
+        const date =
+            item.date ||
+            item.followupDate ||
+            "";
+
+        if (status === "completed") {
+            return false;
+        }
+
+        if (!date) {
+            return false;
+        }
+
+        const followupDate =
+            new Date(date + "T00:00:00");
+
+        return followupDate <= today;
+
+    }).length;
+
+
+/* FEEDBACK PENDING */
+
+const feedbackPending =
+    submissions.filter(function(item) {
+
+        return !String(
+            item.feedback || ""
+        ).trim();
+
+    }).length;
+
+
+/* UPDATE CARDS */
+
+if (cards[0])
+    cards[0].textContent = openRequirements;
+
+if (cards[1])
+    cards[1].textContent = activeCandidates;
+
+if (cards[2])
+    cards[2].textContent = totalSubmissions;
+
+if (cards[3])
+    cards[3].textContent = totalInterviews;
+
+if (cards[4])
+    cards[4].textContent = selected;
+
+if (cards[5])
+    cards[5].textContent = joined;
+
+if (cards[6])
+    cards[6].textContent = followupsDue;
+
+if (cards[7])
+    cards[7].textContent = feedbackPending;
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+document
+    .querySelectorAll(".nav-btn")
+    .forEach(function(button) {
+
+        const text =
+            button.textContent.trim();
+
+        if (text.includes("Interviews")) {
+
+            button.onclick = function() {
+                window.location.href =
+                    "pages/interviews.html";
+            };
+
+        }
+
+        if (text.includes("Follow-ups")) {
+
+            button.onclick = function() {
+                window.location.href =
+                    "pages/followups.html";
+            };
+
+        }
+
+        if (text.includes("Offers")) {
+
+            button.onclick = function() {
+                window.location.href =
+                    "pages/offers.html";
+            };
+
+        }
+
+    });
+
+</script>
 </body>
 </html>
