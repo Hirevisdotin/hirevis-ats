@@ -1297,14 +1297,21 @@ function renderRequirements(list = requirements) {
 
             <td>
 
-                <button
-                    class="action-btn"
-                    onclick="viewRequirement('${requirement.id}')"
-                >
-                    View
-                </button>
+    <button
+        class="action-btn"
+        onclick="viewRequirement('${requirement.id}')"
+    >
+        View
+    </button>
 
-            </td>
+    <button
+        class="action-btn"
+        onclick="deleteRequirement('${requirement.id}')"
+    >
+        Delete
+    </button>
+
+</td>
 
         `;
 
@@ -1409,7 +1416,43 @@ function viewRequirement(id) {
     );
 
 }
+/* =========================
+   DELETE REQUIREMENT
+========================= */
 
+function deleteRequirement(id) {
+
+    const requirement =
+        requirements.find(
+            item => item.id === id
+        );
+
+    if (!requirement) {
+        return;
+    }
+
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this requirement?\n\n" +
+            requirement.title +
+            "\n\nThis action cannot be undone."
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    requirements =
+        requirements.filter(
+            item => item.id !== id
+        );
+
+    saveToStorage();
+
+    renderRequirements();
+
+    alert("Requirement deleted successfully.");
+}
 
 /* =========================
    FILTER
