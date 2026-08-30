@@ -1,724 +1,806 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Hirevis ATS - Candidates</title>
-
-    <style>
-        :root {
-            --orange: #F28C28;
-            --green: #5B8C2A;
-            --dark: #172018;
-            --muted: #6b756d;
-            --bg: #f5f7f4;
-            --white: #ffffff;
-            --border: #e4e8e3;
-            --danger: #c0392b;
-            --shadow: 0 8px 25px rgba(23, 32, 24, 0.08);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: var(--bg);
-            color: var(--dark);
-            min-height: 100vh;
-        }
-
-        button,
-        input,
-        select {
-            font: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================
-           LAYOUT
-        ========================= */
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: var(--dark);
-            color: white;
-            padding: 24px 16px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            overflow-y: auto;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 4px 10px 28px;
-        }
-
-        .brand-logo {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--orange), var(--green));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-        }
-
-        .brand-text strong {
-            display: block;
-            font-size: 18px;
-        }
-
-        .brand-text span {
-            font-size: 11px;
-            color: #b7c0b9;
-        }
-
-        .nav-section {
-            margin-bottom: 24px;
-        }
-
-        .nav-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8f9b91;
-            padding: 0 12px 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #dce3dd;
-            text-decoration: none;
-            padding: 11px 12px;
-            border-radius: 9px;
-            margin-bottom: 3px;
-            font-size: 14px;
-        }
-
-        .nav-item:hover {
-            background: rgba(255,255,255,0.07);
-        }
-
-        .nav-item.active {
-            background: rgba(242, 140, 40, 0.16);
-            color: white;
-            border-left: 3px solid var(--orange);
-        }
-
-        .nav-icon {
-            width: 22px;
-            text-align: center;
-        }
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            padding: 30px;
-        }
-
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 28px;
-        }
-
-        .page-title h1 {
-            font-size: 30px;
-            margin-bottom: 7px;
-        }
-
-        .page-title p {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .btn-primary {
-            background: var(--orange);
-            color: white;
-            border: none;
-            border-radius: 9px;
-            padding: 12px 18px;
-            font-weight: 700;
-            box-shadow: 0 5px 15px rgba(242, 140, 40, 0.2);
-        }
-
-        .btn-primary:hover {
-            opacity: 0.92;
-        }
-
-        /* =========================
-           STATS
-        ========================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 22px;
-        }
-
-        .stat-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-        }
-
-        .stat-label {
-            color: var(--muted);
-            font-size: 13px;
-            margin-bottom: 10px;
-        }
-
-        .stat-value {
-            font-size: 27px;
-            font-weight: 800;
-        }
-
-        .stat-note {
-            margin-top: 7px;
-            font-size: 12px;
-            color: var(--green);
-        }
-
-        /* =========================
-           FILTER AREA
-        ========================= */
-
-        .panel {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .filter-area {
-            padding: 18px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .filter-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 12px;
-        }
-
-        .input,
-        .select {
-            width: 100%;
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            padding: 11px 12px;
-            background: white;
-            color: var(--dark);
-            outline: none;
-        }
-
-        .input:focus,
-        .select:focus {
-            border-color: var(--orange);
-            box-shadow: 0 0 0 3px rgba(242, 140, 40, 0.1);
-        }
-
-        /* =========================
-           TABLE
-        ========================= */
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
-        }
-
-        th {
-            text-align: left;
-            padding: 14px 16px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--muted);
-            background: #fafbfa;
-            border-bottom: 1px solid var(--border);
-        }
-
-        td {
-            padding: 15px 16px;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-            vertical-align: middle;
-        }
-
-        tr:hover td {
-            background: #fcfdfc;
-        }
-
-        .candidate-name {
-            font-weight: 700;
-        }
-
-        .candidate-id {
-            display: block;
-            color: var(--muted);
-            font-size: 11px;
-            margin-top: 4px;
-        }
-
-        .status {
-            display: inline-flex;
-            padding: 5px 9px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .status-active {
-            background: #edf6e8;
-            color: var(--green);
-        }
-
-        .status-interviewing {
-            background: #fff2df;
-            color: #b76700;
-        }
-
-        .status-selected {
-            background: #e6f4ea;
-            color: #27733b;
-        }
-
-        .status-inactive {
-            background: #eeeeee;
-            color: #666;
-        }
-
-        .action-btn {
-            border: 1px solid var(--border);
-            background: white;
-            padding: 7px 10px;
-            border-radius: 7px;
-            font-size: 12px;
-        }
-
-        .action-btn:hover {
-            border-color: var(--orange);
-            color: var(--orange);
-        }
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.48);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 1000;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            width: 100%;
-            max-width: 850px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 16px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.2);
-        }
-
-        .modal-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h2 {
-            font-size: 21px;
-        }
-
-        .close-btn {
-            border: none;
-            background: #f3f4f3;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            font-size: 20px;
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #4f5951;
-        }
-
-        .modal-footer {
-            padding: 18px 24px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        .btn-secondary {
-            border: 1px solid var(--border);
-            background: white;
-            color: var(--dark);
-            border-radius: 9px;
-            padding: 11px 17px;
-            font-weight: 600;
-        }
-
-        /* =========================
-           EMPTY / NO RESULTS
-        ========================= */
-
-        .no-results {
-            text-align: center;
-            padding: 45px 20px;
-            color: var(--muted);
-            display: none;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 1100px) {
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .filter-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 760px) {
-            .sidebar {
-                width: 70px;
-                padding: 18px 8px;
-            }
-
-            .brand {
-                justify-content: center;
-                padding-left: 0;
-                padding-right: 0;
-            }
-
-            .brand-text,
-            .nav-title,
-            .nav-item span:not(.nav-icon) {
-                display: none;
-            }
-
-            .nav-item {
-                justify-content: center;
-            }
-
-            .main {
-                margin-left: 70px;
-                width: calc(100% - 70px);
-                padding: 18px;
-            }
-
-            .topbar {
-                flex-direction: column;
-            }
-
-            .stats {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .filter-row {
-                grid-template-columns: 1fr;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full {
-                grid-column: auto;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .page-title h1 {
-                font-size: 25px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Hirevis ATS - Candidates</title>
+
+<style>
+:root{
+    --orange:#F28C28;
+    --green:#5B8C2A;
+    --dark:#172018;
+    --muted:#6b756d;
+    --bg:#f5f7f4;
+    --white:#ffffff;
+    --border:#e4e8e3;
+    --danger:#c0392b;
+    --shadow:0 8px 25px rgba(23,32,24,.08);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--dark);
+    min-height:100vh;
+}
+
+button,input,select,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+/* SIDEBAR */
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:250px;
+    background:var(--dark);
+    color:white;
+    padding:24px 16px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:4px 10px 28px;
+}
+
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--orange),var(--green));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:18px;
+}
+
+.brand-text strong{
+    display:block;
+    font-size:18px;
+}
+
+.brand-text span{
+    font-size:11px;
+    color:#b7c0b9;
+}
+
+.nav-section{
+    margin-bottom:24px;
+}
+
+.nav-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#8f9b91;
+    padding:0 12px 8px;
+}
+
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#dce3dd;
+    text-decoration:none;
+    padding:11px 12px;
+    border-radius:9px;
+    margin-bottom:3px;
+    font-size:14px;
+}
+
+.nav-item:hover{
+    background:rgba(255,255,255,.07);
+}
+
+.nav-item.active{
+    background:rgba(242,140,40,.16);
+    color:white;
+    border-left:3px solid var(--orange);
+}
+
+.nav-icon{
+    width:22px;
+    text-align:center;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:20px;
+    margin-bottom:28px;
+}
+
+.page-title h1{
+    font-size:30px;
+    margin-bottom:7px;
+}
+
+.page-title p{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.btn-primary{
+    background:var(--orange);
+    color:white;
+    border:none;
+    border-radius:9px;
+    padding:12px 18px;
+    font-weight:700;
+    box-shadow:0 5px 15px rgba(242,140,40,.2);
+}
+
+.btn-primary:hover{
+    opacity:.92;
+}
+
+.btn-secondary{
+    border:1px solid var(--border);
+    background:white;
+    color:var(--dark);
+    border-radius:9px;
+    padding:11px 17px;
+    font-weight:600;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:16px;
+    margin-bottom:22px;
+}
+
+.stat-card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.stat-label{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.stat-value{
+    font-size:27px;
+    font-weight:800;
+}
+
+.stat-note{
+    margin-top:7px;
+    font-size:12px;
+    color:var(--green);
+}
+
+/* PANEL */
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+}
+
+.filter-area{
+    padding:18px;
+    border-bottom:1px solid var(--border);
+}
+
+.filter-row{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:12px;
+}
+
+.input,
+.select{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:11px 12px;
+    background:white;
+    color:var(--dark);
+    outline:none;
+}
+
+.input:focus,
+.select:focus{
+    border-color:var(--orange);
+    box-shadow:0 0 0 3px rgba(242,140,40,.1);
+}
+
+/* TABLE */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1100px;
+}
+
+th{
+    text-align:left;
+    padding:14px 16px;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:var(--muted);
+    background:#fafbfa;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:15px 16px;
+    border-bottom:1px solid var(--border);
+    font-size:13px;
+    vertical-align:middle;
+}
+
+tr:hover td{
+    background:#fcfdfc;
+}
+
+.candidate-name{
+    font-weight:700;
+}
+
+.candidate-id{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:4px;
+}
+
+.status{
+    display:inline-flex;
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:700;
+}
+
+.status-active{
+    background:#edf6e8;
+    color:var(--green);
+}
+
+.status-interviewing{
+    background:#fff2df;
+    color:#b76700;
+}
+
+.status-selected{
+    background:#e6f4ea;
+    color:#27733b;
+}
+
+.status-inactive{
+    background:#eeeeee;
+    color:#666;
+}
+
+.action-btn{
+    border:1px solid var(--border);
+    background:white;
+    padding:7px 10px;
+    border-radius:7px;
+    font-size:12px;
+}
+
+.action-btn:hover{
+    border-color:var(--orange);
+    color:var(--orange);
+}
+
+.resume-btn{
+    border:1px solid #dce8d6;
+    background:#f2f8ef;
+    color:var(--green);
+    padding:7px 10px;
+    border-radius:7px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.resume-btn:hover{
+    border-color:var(--green);
+}
+
+/* MODAL */
+
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:1000;
+}
+
+.modal-overlay.show{
+    display:flex;
+}
+
+.modal{
+    background:white;
+    width:100%;
+    max-width:850px;
+    max-height:90vh;
+    overflow-y:auto;
+    border-radius:16px;
+    box-shadow:0 25px 70px rgba(0,0,0,.2);
+}
+
+.modal-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.modal-header h2{
+    font-size:21px;
+}
+
+.close-btn{
+    border:none;
+    background:#f3f4f3;
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    font-size:20px;
+}
+
+.modal-body{
+    padding:24px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-group.full{
+    grid-column:1/-1;
+}
+
+.form-group label{
+    font-size:12px;
+    font-weight:700;
+    color:#4f5951;
+}
+
+.resume-upload{
+    border:2px dashed #dfe6dc;
+    border-radius:10px;
+    padding:16px;
+    background:#fafcf9;
+}
+
+.resume-upload input{
+    width:100%;
+}
+
+.resume-help{
+    margin-top:7px;
+    font-size:11px;
+    color:var(--muted);
+}
+
+.modal-footer{
+    padding:18px 24px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+}
+
+/* PROFILE MODAL */
+
+.profile-modal{
+    max-width:650px;
+}
+
+.profile-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+}
+
+.profile-item{
+    padding:12px;
+    background:#f8faf7;
+    border-radius:9px;
+}
+
+.profile-item strong{
+    display:block;
+    font-size:11px;
+    color:var(--muted);
+    margin-bottom:5px;
+}
+
+.profile-item span{
+    font-size:13px;
+}
+
+.profile-full{
+    grid-column:1/-1;
+}
+
+.resume-box{
+    margin-top:18px;
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:#fafbfa;
+}
+
+.resume-box h3{
+    font-size:14px;
+    margin-bottom:10px;
+}
+
+.resume-file{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+}
+
+.no-resume{
+    color:var(--muted);
+    font-size:12px;
+}
+
+/* NO RESULTS */
+
+.no-results{
+    text-align:center;
+    padding:45px 20px;
+    color:var(--muted);
+    display:none;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .filter-row{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:760px){
+
+    .sidebar{
+        width:70px;
+        padding:18px 8px;
+    }
+
+    .brand{
+        justify-content:center;
+        padding-left:0;
+        padding-right:0;
+    }
+
+    .brand-text,
+    .nav-title,
+    .nav-item span:not(.nav-icon){
+        display:none;
+    }
+
+    .nav-item{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+        width:calc(100% - 70px);
+        padding:18px;
+    }
+
+    .topbar{
+        flex-direction:column;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .filter-row{
+        grid-template-columns:1fr;
+    }
+
+    .form-grid,
+    .profile-grid{
+        grid-template-columns:1fr;
+    }
+
+    .form-group.full,
+    .profile-full{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:480px){
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .page-title h1{
+        font-size:25px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+<!-- SIDEBAR -->
 
-        <div class="brand">
-            <div class="brand-logo">H</div>
+<aside class="sidebar">
 
-            <div class="brand-text">
-                <strong>Hirevis</strong>
-                <span>Recruitment Redefined</span>
-            </div>
-        </div>
+<div class="brand">
+    <div class="brand-logo">H</div>
 
-        <div class="nav-section">
+    <div class="brand-text">
+        <strong>Hirevis</strong>
+        <span>Recruitment Redefined</span>
+    </div>
+</div>
 
-            <div class="nav-title">Main</div>
+<div class="nav-section">
 
-            <a class="nav-item" href="../index.html">
-                <span class="nav-icon">📊</span>
-                <span>Dashboard</span>
-            </a>
+<div class="nav-title">Main</div>
 
-            <a class="nav-item active" href="candidates.html">
-                <span class="nav-icon">👤</span>
-                <span>Candidates</span>
-            </a>
+<a class="nav-item" href="../index.html">
+    <span class="nav-icon">📊</span>
+    <span>Dashboard</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">🏢</span>
-                <span>Clients</span>
-            </a>
+<a class="nav-item active" href="candidates.html">
+    <span class="nav-icon">👤</span>
+    <span>Candidates</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">📋</span>
-                <span>Requirements</span>
-            </a>
+<a class="nav-item" href="clients.html">
+    <span class="nav-icon">🏢</span>
+    <span>Clients</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">📤</span>
-                <span>Submissions</span>
-            </a>
+<a class="nav-item" href="requirements.html">
+    <span class="nav-icon">📋</span>
+    <span>Requirements</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">📅</span>
-                <span>Interviews</span>
-            </a>
+<a class="nav-item" href="submissions.html">
+    <span class="nav-icon">📤</span>
+    <span>Submissions</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">🔔</span>
-                <span>Follow-ups</span>
-            </a>
+<a class="nav-item" href="interviews.html">
+    <span class="nav-icon">📅</span>
+    <span>Interviews</span>
+</a>
 
-        </div>
+<a class="nav-item" href="followups.html">
+    <span class="nav-icon">🔔</span>
+    <span>Follow-ups</span>
+</a>
 
-        <div class="nav-section">
+</div>
 
-            <div class="nav-title">Hiring</div>
+<div class="nav-section">
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">💼</span>
-                <span>Offers</span>
-            </a>
+<div class="nav-title">Hiring</div>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">✅</span>
-                <span>Joinings</span>
-            </a>
+<a class="nav-item" href="offers.html">
+    <span class="nav-icon">💼</span>
+    <span>Offers</span>
+</a>
 
-            <a class="nav-item" href="#">
-                <span class="nav-icon">📈</span>
-                <span>Reports</span>
-            </a>
+<a class="nav-item" href="joinings.html">
+    <span class="nav-icon">✅</span>
+    <span>Joinings</span>
+</a>
 
-        </div>
+<a class="nav-item" href="reports.html">
+    <span class="nav-icon">📈</span>
+    <span>Reports</span>
+</a>
 
-    </aside>
+</div>
 
-
-    <!-- MAIN CONTENT -->
-    <main class="main">
-
-        <div class="topbar">
-
-            <div class="page-title">
-                <h1>Candidates</h1>
-                <p>Manage, search and track your Hirevis candidate database.</p>
-            </div>
-
-            <button class="btn-primary" onclick="openCandidateModal()">
-                + Add Candidate
-            </button>
-
-        </div>
+</aside>
 
 
-        <!-- STATS -->
-        <section class="stats">
+<!-- MAIN -->
 
-            <div class="stat-card">
-                <div class="stat-label">Total Candidates</div>
-                <div class="stat-value" id="totalCandidates">5</div>
-                <div class="stat-note">Candidate database</div>
-            </div>
+<main class="main">
 
-            <div class="stat-card">
-                <div class="stat-label">Active Candidates</div>
-                <div class="stat-value" id="activeCandidates">3</div>
-                <div class="stat-note">Currently available</div>
-            </div>
+<div class="topbar">
 
-            <div class="stat-card">
-                <div class="stat-label">Interviewing</div>
-                <div class="stat-value" id="interviewingCandidates">1</div>
-                <div class="stat-note">In interview pipeline</div>
-            </div>
+<div class="page-title">
+    <h1>Candidates</h1>
+    <p>Manage, search and track your Hirevis candidate database.</p>
+</div>
 
-            <div class="stat-card">
-                <div class="stat-label">Selected</div>
-                <div class="stat-value" id="selectedCandidates">1</div>
-                <div class="stat-note">Successfully selected</div>
-            </div>
+<button class="btn-primary" onclick="openCandidateModal()">
+    + Add Candidate
+</button>
 
-        </section>
+</div>
 
 
-        <!-- CANDIDATE PANEL -->
-        <section class="panel">
+<!-- STATS -->
 
-            <div class="filter-area">
+<section class="stats">
 
-                <div class="filter-row">
+<div class="stat-card">
+    <div class="stat-label">Total Candidates</div>
+    <div class="stat-value" id="totalCandidates">0</div>
+    <div class="stat-note">Candidate database</div>
+</div>
 
-                    <input
-                        type="text"
-                        id="searchInput"
-                        class="input"
-                        placeholder="🔍 Search name, phone, email, company, designation..."
-                        oninput="filterCandidates()"
-                    >
+<div class="stat-card">
+    <div class="stat-label">Active Candidates</div>
+    <div class="stat-value" id="activeCandidates">0</div>
+    <div class="stat-note">Currently available</div>
+</div>
 
-                    <select id="locationFilter" class="select" onchange="filterCandidates()">
-                        <option value="">All Locations</option>
-                        <option value="Delhi">Delhi</option>
-                        <option value="Mumbai">Mumbai</option>
-                        <option value="Bengaluru">Bengaluru</option>
-                        <option value="Pune">Pune</option>
-                    </select>
+<div class="stat-card">
+    <div class="stat-label">Interviewing</div>
+    <div class="stat-value" id="interviewingCandidates">0</div>
+    <div class="stat-note">In interview pipeline</div>
+</div>
 
-                    <select id="statusFilter" class="select" onchange="filterCandidates()">
-                        <option value="">All Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Interviewing">Interviewing</option>
-                        <option value="Selected">Selected</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
+<div class="stat-card">
+    <div class="stat-label">Selected</div>
+    <div class="stat-value" id="selectedCandidates">0</div>
+    <div class="stat-note">Successfully selected</div>
+</div>
 
-                    <select id="sourceFilter" class="select" onchange="filterCandidates()">
-                        <option value="">All Sources</option>
-                        <option value="Naukri">Naukri</option>
-                        <option value="LinkedIn">LinkedIn</option>
-                        <option value="Indeed">Indeed</option>
-                        <option value="Referral">Referral</option>
-                    </select>
-
-                </div>
-
-            </div>
+</section>
 
 
-            <div class="table-wrapper">
+<!-- CANDIDATE TABLE -->
 
-                <table>
+<section class="panel">
 
-                    <thead>
-                        <tr>
-                            <th>Candidate</th>
-                            <th>Position</th>
-                            <th>Experience</th>
-                            <th>Location</th>
-                            <th>Current CTC</th>
-                            <th>Notice</th>
-                            <th>Recruiter</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
+<div class="filter-area">
 
-                    <tbody id="candidateTableBody"></tbody>
+<div class="filter-row">
 
-                </table>
+<input
+    type="text"
+    id="searchInput"
+    class="input"
+    placeholder="🔍 Search name, phone, email, company, designation..."
+    oninput="filterCandidates()"
+>
 
-                <div id="noResults" class="no-results">
-                    No candidates found matching your search.
-                </div>
+<select id="locationFilter" class="select" onchange="filterCandidates()">
+    <option value="">All Locations</option>
+    <option value="Delhi">Delhi</option>
+    <option value="Mumbai">Mumbai</option>
+    <option value="Bengaluru">Bengaluru</option>
+    <option value="Pune">Pune</option>
+</select>
 
-            </div>
+<select id="statusFilter" class="select" onchange="filterCandidates()">
+    <option value="">All Status</option>
+    <option value="Active">Active</option>
+    <option value="Interviewing">Interviewing</option>
+    <option value="Selected">Selected</option>
+    <option value="Inactive">Inactive</option>
+</select>
 
-        </section>
+<select id="sourceFilter" class="select" onchange="filterCandidates()">
+    <option value="">All Sources</option>
+    <option value="Naukri">Naukri</option>
+    <option value="LinkedIn">LinkedIn</option>
+    <option value="Indeed">Indeed</option>
+    <option value="Referral">Referral</option>
+</select>
 
-    </main>
+</div>
+</div>
+
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Candidate</th>
+    <th>Position</th>
+    <th>Experience</th>
+    <th>Location</th>
+    <th>Current CTC</th>
+    <th>Notice</th>
+    <th>Recruiter</th>
+    <th>Status</th>
+    <th>Resume</th>
+    <th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="candidateTableBody"></tbody>
+
+</table>
+
+<div id="noResults" class="no-results">
+    No candidates found matching your search.
+</div>
+
+</div>
+
+</section>
+
+</main>
 
 </div>
 
@@ -727,348 +809,405 @@
 
 <div id="candidateModal" class="modal-overlay">
 
-    <div class="modal">
+<div class="modal">
 
-        <div class="modal-header">
+<div class="modal-header">
 
-            <h2>Add Candidate</h2>
+<h2>Add Candidate</h2>
 
-            <button class="close-btn" onclick="closeCandidateModal()">
-                ×
-            </button>
+<button class="close-btn" onclick="closeCandidateModal()">×</button>
 
-        </div>
+</div>
 
 
-        <form id="candidateForm" onsubmit="saveCandidate(event)">
+<form id="candidateForm" onsubmit="saveCandidate(event)">
 
-            <div class="modal-body">
+<div class="modal-body">
 
-                <div class="form-grid">
+<div class="form-grid">
 
-                    <div class="form-group">
-                        <label>Candidate Name *</label>
-                        <input id="candidateName" class="input" required>
-                    </div>
+<div class="form-group">
+<label>Candidate Name *</label>
+<input id="candidateName" class="input" required>
+</div>
 
-                    <div class="form-group">
-                        <label>Phone Number *</label>
-                        <input id="candidatePhone" class="input" type="tel" required>
-                    </div>
+<div class="form-group">
+<label>Phone Number *</label>
+<input id="candidatePhone" class="input" type="tel" required>
+</div>
 
-                    <div class="form-group">
-                        <label>Email ID *</label>
-                        <input id="candidateEmail" class="input" type="email" required>
-                    </div>
+<div class="form-group">
+<label>Email ID *</label>
+<input id="candidateEmail" class="input" type="email" required>
+</div>
 
-                    <div class="form-group">
-                        <label>Location</label>
-                        <input id="candidateLocation" class="input" placeholder="State / City">
-                    </div>
+<div class="form-group">
+<label>Location</label>
+<input id="candidateLocation" class="input" placeholder="State / City">
+</div>
 
-                    <div class="form-group">
-                        <label>Position</label>
-                        <input id="candidatePosition" class="input">
-                    </div>
+<div class="form-group">
+<label>Position</label>
+<input id="candidatePosition" class="input">
+</div>
 
-                    <div class="form-group">
-                        <label>Current Company</label>
-                        <input id="candidateCompany" class="input">
-                    </div>
+<div class="form-group">
+<label>Current Company</label>
+<input id="candidateCompany" class="input">
+</div>
 
-                    <div class="form-group">
-                        <label>Current Designation</label>
-                        <input id="candidateDesignation" class="input">
-                    </div>
+<div class="form-group">
+<label>Current Designation</label>
+<input id="candidateDesignation" class="input">
+</div>
 
-                    <div class="form-group">
-                        <label>Total Experience</label>
-                        <input id="candidateExperience" class="input" placeholder="e.g. 8 Years">
-                    </div>
+<div class="form-group">
+<label>Total Experience</label>
+<input id="candidateExperience" class="input" placeholder="e.g. 8 Years">
+</div>
 
-                    <div class="form-group">
-                        <label>Current CTC</label>
-                        <input id="candidateCurrentCtc" class="input" placeholder="e.g. ₹8 LPA">
-                    </div>
+<div class="form-group">
+<label>Current CTC</label>
+<input id="candidateCurrentCtc" class="input" placeholder="e.g. ₹8 LPA">
+</div>
 
-                    <div class="form-group">
-                        <label>Expected CTC</label>
-                        <input id="candidateExpectedCtc" class="input" placeholder="e.g. ₹10 LPA">
-                    </div>
+<div class="form-group">
+<label>Expected CTC</label>
+<input id="candidateExpectedCtc" class="input" placeholder="e.g. ₹10 LPA">
+</div>
 
-                    <div class="form-group">
-                        <label>Notice Period</label>
-                        <input id="candidateNotice" class="input" placeholder="e.g. 30 Days">
-                    </div>
+<div class="form-group">
+<label>Notice Period</label>
+<input id="candidateNotice" class="input" placeholder="e.g. 30 Days">
+</div>
 
-                    <div class="form-group">
-                        <label>Candidate Source</label>
-                        <select id="candidateSource" class="select">
-                            <option value="Naukri">Naukri</option>
-                            <option value="LinkedIn">LinkedIn</option>
-                            <option value="Indeed">Indeed</option>
-                            <option value="Apna">Apna</option>
-                            <option value="Referral">Referral</option>
-                            <option value="Direct">Direct</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
+<div class="form-group">
+<label>Candidate Source</label>
 
-                    <div class="form-group">
-                        <label>Recruiter</label>
-                        <input id="candidateRecruiter" class="input" placeholder="Recruiter name">
-                    </div>
+<select id="candidateSource" class="select">
 
-                    <div class="form-group full">
-                        <label>Remarks</label>
-                        <textarea
-                            id="candidateRemarks"
-                            class="input"
-                            rows="4"
-                            placeholder="Add candidate notes..."
-                        ></textarea>
-                    </div>
+<option value="Naukri">Naukri</option>
+<option value="LinkedIn">LinkedIn</option>
+<option value="Indeed">Indeed</option>
+<option value="Apna">Apna</option>
+<option value="Referral">Referral</option>
+<option value="Direct">Direct</option>
+<option value="Other">Other</option>
 
-                </div>
+</select>
 
-            </div>
+</div>
+
+<div class="form-group">
+<label>Recruiter</label>
+<input id="candidateRecruiter" class="input" placeholder="Recruiter name">
+</div>
 
 
-            <div class="modal-footer">
+<!-- RESUME -->
 
-                <button
-                    type="button"
-                    class="btn-secondary"
-                    onclick="closeCandidateModal()"
-                >
-                    Cancel
-                </button>
+<div class="form-group full">
 
-                <button type="submit" class="btn-primary">
-                    Save Candidate
-                </button>
+<label>Resume</label>
 
-            </div>
+<div class="resume-upload">
 
-        </form>
+<input
+    id="candidateResume"
+    type="file"
+    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+>
 
-    </div>
+<div class="resume-help">
+    Upload candidate resume — PDF, DOC or DOCX. Maximum recommended size: 2 MB.
+</div>
+
+</div>
+
+</div>
+
+
+<div class="form-group full">
+
+<label>Remarks</label>
+
+<textarea
+    id="candidateRemarks"
+    class="input"
+    rows="4"
+    placeholder="Add candidate notes..."
+></textarea>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="modal-footer">
+
+<button
+    type="button"
+    class="btn-secondary"
+    onclick="closeCandidateModal()"
+>
+    Cancel
+</button>
+
+<button type="submit" class="btn-primary">
+    Save Candidate
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<!-- VIEW CANDIDATE MODAL -->
+
+<div id="viewModal" class="modal-overlay">
+
+<div class="modal profile-modal">
+
+<div class="modal-header">
+
+<h2>Candidate Profile</h2>
+
+<button class="close-btn" onclick="closeViewModal()">×</button>
+
+</div>
+
+<div class="modal-body">
+
+<div id="candidateProfile"></div>
+
+</div>
+
+<div class="modal-footer">
+
+<button class="btn-secondary" onclick="closeViewModal()">
+    Close
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 
 <script>
 
-    /*
-     * TEMPORARY FRONTEND DATA
-     *
-     * This is only sample data.
-     * Later we will replace this with our real database.
-     */
+/* =========================
+   DATA
+========================= */
 
-    let candidates = [
+const STORAGE_KEY = "hirevisCandidates";
 
-        {
-            id: "HV-CAN-000001",
-            name: "Amit Sharma",
-            phone: "9876543210",
-            email: "amit@example.com",
-            position: "Project Manager",
-            company: "ABC Technologies",
-            designation: "Project Manager",
-            experience: "10 Years",
-            location: "Delhi",
-            currentCtc: "₹10 LPA",
-            notice: "30 Days",
-            recruiter: "Recruiter 1",
-            source: "Naukri",
-            status: "Active"
-        },
+let candidates = loadCandidates();
 
-        {
-            id: "HV-CAN-000002",
-            name: "Priya Mehta",
-            phone: "9876543211",
-            email: "priya@example.com",
-            position: "HR Manager",
-            company: "XYZ Limited",
-            designation: "HR Manager",
-            experience: "8 Years",
-            location: "Mumbai",
-            currentCtc: "₹9 LPA",
-            notice: "60 Days",
-            recruiter: "Recruiter 2",
-            source: "LinkedIn",
-            status: "Interviewing"
-        },
 
-        {
-            id: "HV-CAN-000003",
-            name: "Rahul Verma",
-            phone: "9876543212",
-            email: "rahul@example.com",
-            position: "Operations Manager",
-            company: "Global Solutions",
-            designation: "Operations Manager",
-            experience: "12 Years",
-            location: "Delhi",
-            currentCtc: "₹12 LPA",
-            notice: "30 Days",
-            recruiter: "Recruiter 1",
-            source: "Referral",
-            status: "Selected"
-        },
+function loadCandidates(){
 
-        {
-            id: "HV-CAN-000004",
-            name: "Neha Singh",
-            phone: "9876543213",
-            email: "neha@example.com",
-            position: "Talent Acquisition Specialist",
-            company: "Tech Services",
-            designation: "TA Specialist",
-            experience: "5 Years",
-            location: "Pune",
-            currentCtc: "₹6 LPA",
-            notice: "15 Days",
-            recruiter: "Recruiter 3",
-            source: "Indeed",
-            status: "Active"
-        },
+    try{
 
-        {
-            id: "HV-CAN-000005",
-            name: "Vikas Kumar",
-            phone: "9876543214",
-            email: "vikas@example.com",
-            position: "Sales Manager",
-            company: "Business Corp",
-            designation: "Sales Manager",
-            experience: "7 Years",
-            location: "Bengaluru",
-            currentCtc: "₹8 LPA",
-            notice: "45 Days",
-            recruiter: "Recruiter 2",
-            source: "Naukri",
-            status: "Inactive"
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if(saved){
+
+            return JSON.parse(saved);
+
         }
 
-    ];
+    }catch(error){
 
+        console.error("Could not load candidates",error);
 
-    /* =========================
-       RENDER CANDIDATES
-    ========================= */
-
-    function renderCandidates(list = candidates) {
-
-        const tableBody = document.getElementById("candidateTableBody");
-        const noResults = document.getElementById("noResults");
-
-        tableBody.innerHTML = "";
-
-        if (list.length === 0) {
-
-            noResults.style.display = "block";
-
-            updateStats();
-
-            return;
-        }
-
-        noResults.style.display = "none";
-
-        list.forEach(candidate => {
-
-            const row = document.createElement("tr");
-
-            row.innerHTML = `
-
-                <td>
-                    <span class="candidate-name">
-                        ${escapeHtml(candidate.name)}
-                    </span>
-
-                    <span class="candidate-id">
-                        ${escapeHtml(candidate.id)}
-                    </span>
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.position || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.experience || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.location || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.currentCtc || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.notice || "-")}
-                </td>
-
-                <td>
-                    ${escapeHtml(candidate.recruiter || "-")}
-                </td>
-
-                <td>
-                    <span class="status ${getStatusClass(candidate.status)}">
-                        ${escapeHtml(candidate.status)}
-                    </span>
-                </td>
-
-                <td>
-                    <button
-                        class="action-btn"
-                        onclick="viewCandidate('${candidate.id}')"
-                    >
-                        View
-                    </button>
-                </td>
-
-            `;
-
-            tableBody.appendChild(row);
-
-        });
-
-        updateStats();
     }
 
+    return [];
 
-    /* =========================
-       SEARCH + FILTER
-    ========================= */
-
-    function filterCandidates() {
-
-        const search = document
-            .getElementById("searchInput")
-            .value
-            .toLowerCase()
-            .trim();
-
-        const location = document
-            .getElementById("locationFilter")
-            .value;
-
-        const status = document
-            .getElementById("statusFilter")
-            .value;
-
-        const source = document
-            .getElementById("sourceFilter")
-            .value;
+}
 
 
-        const filtered = candidates.filter(candidate => {
+function saveCandidates(){
+
+    try{
+
+        localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify(candidates)
+        );
+
+    }catch(error){
+
+        alert(
+            "The candidate was not saved because the browser storage limit was reached. Please use smaller resume files or remove older attachments."
+        );
+
+        console.error(error);
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function renderCandidates(list = candidates){
+
+    const tableBody =
+        document.getElementById("candidateTableBody");
+
+    const noResults =
+        document.getElementById("noResults");
+
+    tableBody.innerHTML = "";
+
+    if(list.length === 0){
+
+        noResults.style.display = "block";
+
+        updateStats();
+
+        return;
+    }
+
+    noResults.style.display = "none";
+
+
+    list.forEach(candidate => {
+
+        const row =
+            document.createElement("tr");
+
+
+        const resumeButton =
+            candidate.resumeData
+            ? `
+                <button
+                    class="resume-btn"
+                    onclick="viewResume('${candidate.id}')"
+                >
+                    📄 Resume
+                </button>
+              `
+            : `<span style="color:#999;font-size:11px;">Not uploaded</span>`;
+
+
+        row.innerHTML = `
+
+<td>
+    <span class="candidate-name">
+        ${escapeHtml(candidate.name)}
+    </span>
+
+    <span class="candidate-id">
+        ${escapeHtml(candidate.id)}
+    </span>
+</td>
+
+<td>
+    ${escapeHtml(candidate.position || "-")}
+</td>
+
+<td>
+    ${escapeHtml(candidate.experience || "-")}
+</td>
+
+<td>
+    ${escapeHtml(candidate.location || "-")}
+</td>
+
+<td>
+    ${escapeHtml(candidate.currentCtc || "-")}
+</td>
+
+<td>
+    ${escapeHtml(candidate.notice || "-")}
+</td>
+
+<td>
+    ${escapeHtml(candidate.recruiter || "-")}
+</td>
+
+<td>
+    <span class="status ${getStatusClass(candidate.status)}">
+        ${escapeHtml(candidate.status)}
+    </span>
+</td>
+
+<td>
+    ${resumeButton}
+</td>
+
+<td>
+
+<button
+    class="action-btn"
+    onclick="viewCandidate('${candidate.id}')"
+>
+    View
+</button>
+
+</td>
+
+`;
+
+        tableBody.appendChild(row);
+
+    });
+
+
+    updateStats();
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function filterCandidates(){
+
+    const search =
+        document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const location =
+        document
+        .getElementById("locationFilter")
+        .value;
+
+
+    const status =
+        document
+        .getElementById("statusFilter")
+        .value;
+
+
+    const source =
+        document
+        .getElementById("sourceFilter")
+        .value;
+
+
+    const filtered =
+        candidates.filter(candidate => {
 
             const searchableText = [
 
@@ -1086,329 +1225,764 @@
             .toLowerCase();
 
 
-            const matchesSearch =
-                !search ||
-                searchableText.includes(search);
-
-
-            const matchesLocation =
-                !location ||
-                candidate.location === location;
-
-
-            const matchesStatus =
-                !status ||
-                candidate.status === status;
-
-
-            const matchesSource =
-                !source ||
-                candidate.source === source;
-
-
             return (
-                matchesSearch &&
-                matchesLocation &&
-                matchesStatus &&
-                matchesSource
+
+                (!search ||
+                searchableText.includes(search))
+
+                &&
+
+                (!location ||
+                candidate.location === location)
+
+                &&
+
+                (!status ||
+                candidate.status === status)
+
+                &&
+
+                (!source ||
+                candidate.source === source)
+
             );
 
         });
 
 
-        renderCandidates(filtered);
+    renderCandidates(filtered);
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+function getStatusClass(status){
+
+    switch(status){
+
+        case "Active":
+            return "status-active";
+
+        case "Interviewing":
+            return "status-interviewing";
+
+        case "Selected":
+            return "status-selected";
+
+        default:
+            return "status-inactive";
     }
 
+}
 
-    /* =========================
-       STATUS
-    ========================= */
 
-    function getStatusClass(status) {
+/* =========================
+   ADD CANDIDATE
+========================= */
 
-        switch (status) {
-
-            case "Active":
-                return "status-active";
-
-            case "Interviewing":
-                return "status-interviewing";
-
-            case "Selected":
-                return "status-selected";
-
-            default:
-                return "status-inactive";
-        }
-    }
-
-
-    /* =========================
-       MODAL
-    ========================= */
-
-    function openCandidateModal() {
-
-        document
-            .getElementById("candidateModal")
-            .classList.add("show");
-
-        document
-            .getElementById("candidateName")
-            .focus();
-    }
-
-
-    function closeCandidateModal() {
-
-        document
-            .getElementById("candidateModal")
-            .classList.remove("show");
-
-        document
-            .getElementById("candidateForm")
-            .reset();
-    }
-
-
-    /* =========================
-       SAVE CANDIDATE
-    ========================= */
-
-    function saveCandidate(event) {
-
-        event.preventDefault();
-
-
-        const name =
-            document.getElementById("candidateName").value.trim();
-
-        const phone =
-            document.getElementById("candidatePhone").value.trim();
-
-        const email =
-            document.getElementById("candidateEmail").value.trim();
-
-
-        /*
-         * Basic duplicate protection.
-         *
-         * Later this will be enforced by the database as well.
-         */
-
-        const duplicate = candidates.some(candidate =>
-
-            candidate.phone === phone ||
-            candidate.email.toLowerCase() === email.toLowerCase()
-
-        );
-
-
-        if (duplicate) {
-
-            alert(
-                "Possible duplicate candidate detected. " +
-                "A candidate with the same phone number or email already exists."
-            );
-
-            return;
-        }
-
-
-        const nextNumber = candidates.length + 1;
-
-        const candidate = {
-
-            id:
-                "HV-CAN-" +
-                String(nextNumber).padStart(6, "0"),
-
-            name: name,
-
-            phone: phone,
-
-            email: email,
-
-            location:
-                document
-                    .getElementById("candidateLocation")
-                    .value
-                    .trim(),
-
-            position:
-                document
-                    .getElementById("candidatePosition")
-                    .value
-                    .trim(),
-
-            company:
-                document
-                    .getElementById("candidateCompany")
-                    .value
-                    .trim(),
-
-            designation:
-                document
-                    .getElementById("candidateDesignation")
-                    .value
-                    .trim(),
-
-            experience:
-                document
-                    .getElementById("candidateExperience")
-                    .value
-                    .trim(),
-
-            currentCtc:
-                document
-                    .getElementById("candidateCurrentCtc")
-                    .value
-                    .trim(),
-
-            expectedCtc:
-                document
-                    .getElementById("candidateExpectedCtc")
-                    .value
-                    .trim(),
-
-            notice:
-                document
-                    .getElementById("candidateNotice")
-                    .value
-                    .trim(),
-
-            source:
-                document
-                    .getElementById("candidateSource")
-                    .value,
-
-            recruiter:
-                document
-                    .getElementById("candidateRecruiter")
-                    .value
-                    .trim(),
-
-            remarks:
-                document
-                    .getElementById("candidateRemarks")
-                    .value
-                    .trim(),
-
-            status: "Active"
-
-        };
-
-
-        candidates.unshift(candidate);
-
-        renderCandidates();
-
-        closeCandidateModal();
-
-        alert(
-            "Candidate added successfully.\n\nCandidate ID: " +
-            candidate.id
-        );
-    }
-
-
-    /* =========================
-       VIEW CANDIDATE
-    ========================= */
-
-    function viewCandidate(id) {
-
-        const candidate =
-            candidates.find(item => item.id === id);
-
-
-        if (!candidate) {
-            return;
-        }
-
-
-        alert(
-
-            "Candidate Profile\n\n" +
-
-            "Candidate ID: " + candidate.id + "\n" +
-            "Name: " + candidate.name + "\n" +
-            "Phone: " + candidate.phone + "\n" +
-            "Email: " + candidate.email + "\n" +
-            "Position: " + (candidate.position || "-") + "\n" +
-            "Company: " + (candidate.company || "-") + "\n" +
-            "Experience: " + (candidate.experience || "-") + "\n" +
-            "Location: " + (candidate.location || "-") + "\n" +
-            "Status: " + candidate.status
-
-        );
-    }
-
-
-    /* =========================
-       STATISTICS
-    ========================= */
-
-    function updateStats() {
-
-        document.getElementById("totalCandidates").textContent =
-            candidates.length;
-
-
-        document.getElementById("activeCandidates").textContent =
-            candidates.filter(
-                candidate => candidate.status === "Active"
-            ).length;
-
-
-        document.getElementById("interviewingCandidates").textContent =
-            candidates.filter(
-                candidate => candidate.status === "Interviewing"
-            ).length;
-
-
-        document.getElementById("selectedCandidates").textContent =
-            candidates.filter(
-                candidate => candidate.status === "Selected"
-            ).length;
-    }
-
-
-    /* =========================
-       SECURITY HELPER
-    ========================= */
-
-    function escapeHtml(value) {
-
-        return String(value || "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-    }
-
-
-    /* =========================
-       CLOSE MODAL ON BACKDROP
-    ========================= */
+function openCandidateModal(){
 
     document
         .getElementById("candidateModal")
-        .addEventListener("click", function(event) {
+        .classList.add("show");
 
-            if (event.target === this) {
-                closeCandidateModal();
-            }
+    document
+        .getElementById("candidateName")
+        .focus();
 
-        });
+}
 
 
-    /* =========================
-       INITIAL LOAD
-    ========================= */
+function closeCandidateModal(){
+
+    document
+        .getElementById("candidateModal")
+        .classList.remove("show");
+
+    document
+        .getElementById("candidateForm")
+        .reset();
+
+}
+
+
+/* =========================
+   FILE READER
+========================= */
+
+function readFileAsDataURL(file){
+
+    return new Promise((resolve,reject)=>{
+
+        const reader =
+            new FileReader();
+
+        reader.onload =
+            () => resolve(reader.result);
+
+        reader.onerror =
+            () => reject(reader.error);
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+/* =========================
+   SAVE CANDIDATE
+========================= */
+
+async function saveCandidate(event){
+
+    event.preventDefault();
+
+
+    const name =
+        document
+        .getElementById("candidateName")
+        .value
+        .trim();
+
+
+    const phone =
+        document
+        .getElementById("candidatePhone")
+        .value
+        .trim();
+
+
+    const email =
+        document
+        .getElementById("candidateEmail")
+        .value
+        .trim();
+
+
+    const duplicate =
+        candidates.some(candidate =>
+
+            candidate.phone === phone ||
+
+            String(candidate.email || "")
+            .toLowerCase() ===
+            email.toLowerCase()
+
+        );
+
+
+    if(duplicate){
+
+        alert(
+            "Possible duplicate candidate detected. A candidate with the same phone number or email already exists."
+        );
+
+        return;
+    }
+
+
+    /* RESUME */
+
+    const resumeInput =
+        document.getElementById("candidateResume");
+
+    const resumeFile =
+        resumeInput.files[0];
+
+
+    let resumeData = "";
+    let resumeName = "";
+    let resumeType = "";
+
+
+    if(resumeFile){
+
+        const allowedTypes = [
+            "application/pdf",
+            "application/msword",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ];
+
+
+        const extension =
+            resumeFile.name
+            .split(".")
+            .pop()
+            .toLowerCase();
+
+
+        if(
+            !allowedTypes.includes(resumeFile.type) &&
+            !["pdf","doc","docx"].includes(extension)
+        ){
+
+            alert(
+                "Please upload only PDF, DOC or DOCX files."
+            );
+
+            return;
+        }
+
+
+        if(resumeFile.size > 2 * 1024 * 1024){
+
+            alert(
+                "Resume is larger than 2 MB. Please upload a smaller file."
+            );
+
+            return;
+        }
+
+
+        try{
+
+            resumeData =
+                await readFileAsDataURL(resumeFile);
+
+            resumeName =
+                resumeFile.name;
+
+            resumeType =
+                resumeFile.type ||
+                "application/octet-stream";
+
+        }catch(error){
+
+            alert(
+                "Could not read the resume file."
+            );
+
+            return;
+        }
+
+    }
+
+
+    const nextNumber =
+        getNextCandidateNumber();
+
+
+    const candidate = {
+
+        id:
+            "HV-CAN-" +
+            String(nextNumber).padStart(6,"0"),
+
+        name:name,
+
+        phone:phone,
+
+        email:email,
+
+        location:
+            document
+            .getElementById("candidateLocation")
+            .value
+            .trim(),
+
+        position:
+            document
+            .getElementById("candidatePosition")
+            .value
+            .trim(),
+
+        company:
+            document
+            .getElementById("candidateCompany")
+            .value
+            .trim(),
+
+        designation:
+            document
+            .getElementById("candidateDesignation")
+            .value
+            .trim(),
+
+        experience:
+            document
+            .getElementById("candidateExperience")
+            .value
+            .trim(),
+
+        currentCtc:
+            document
+            .getElementById("candidateCurrentCtc")
+            .value
+            .trim(),
+
+        expectedCtc:
+            document
+            .getElementById("candidateExpectedCtc")
+            .value
+            .trim(),
+
+        notice:
+            document
+            .getElementById("candidateNotice")
+            .value
+            .trim(),
+
+        source:
+            document
+            .getElementById("candidateSource")
+            .value,
+
+        recruiter:
+            document
+            .getElementById("candidateRecruiter")
+            .value
+            .trim(),
+
+        remarks:
+            document
+            .getElementById("candidateRemarks")
+            .value
+            .trim(),
+
+        resumeData:resumeData,
+
+        resumeName:resumeName,
+
+        resumeType:resumeType,
+
+        status:"Active",
+
+        createdAt:new Date().toISOString()
+
+    };
+
+
+    candidates.unshift(candidate);
+
+
+    if(!saveCandidates()){
+
+        candidates.shift();
+
+        return;
+    }
+
 
     renderCandidates();
+
+    closeCandidateModal();
+
+
+    alert(
+        "Candidate added successfully.\n\nCandidate ID: " +
+        candidate.id
+    );
+
+}
+
+
+/* =========================
+   NEXT ID
+========================= */
+
+function getNextCandidateNumber(){
+
+    let highest = 0;
+
+
+    candidates.forEach(candidate => {
+
+        const match =
+            String(candidate.id || "")
+            .match(/HV-CAN-(\d+)/);
+
+
+        if(match){
+
+            highest =
+                Math.max(
+                    highest,
+                    parseInt(match[1],10)
+                );
+
+        }
+
+    });
+
+
+    return highest + 1;
+
+}
+
+
+/* =========================
+   VIEW CANDIDATE
+========================= */
+
+function viewCandidate(id){
+
+    const candidate =
+        candidates.find(
+            item => item.id === id
+        );
+
+
+    if(!candidate){
+        return;
+    }
+
+
+    const profile =
+        document.getElementById("candidateProfile");
+
+
+    profile.innerHTML = `
+
+<div class="profile-grid">
+
+<div class="profile-item">
+<strong>Candidate ID</strong>
+<span>${escapeHtml(candidate.id)}</span>
+</div>
+
+<div class="profile-item">
+<strong>Status</strong>
+<span>
+    ${escapeHtml(candidate.status || "-")}
+</span>
+</div>
+
+<div class="profile-item">
+<strong>Name</strong>
+<span>${escapeHtml(candidate.name)}</span>
+</div>
+
+<div class="profile-item">
+<strong>Phone</strong>
+<span>${escapeHtml(candidate.phone)}</span>
+</div>
+
+<div class="profile-item">
+<strong>Email</strong>
+<span>${escapeHtml(candidate.email)}</span>
+</div>
+
+<div class="profile-item">
+<strong>Location</strong>
+<span>${escapeHtml(candidate.location || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Position</strong>
+<span>${escapeHtml(candidate.position || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Current Company</strong>
+<span>${escapeHtml(candidate.company || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Current Designation</strong>
+<span>${escapeHtml(candidate.designation || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Experience</strong>
+<span>${escapeHtml(candidate.experience || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Current CTC</strong>
+<span>${escapeHtml(candidate.currentCtc || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Expected CTC</strong>
+<span>${escapeHtml(candidate.expectedCtc || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Notice Period</strong>
+<span>${escapeHtml(candidate.notice || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Source</strong>
+<span>${escapeHtml(candidate.source || "-")}</span>
+</div>
+
+<div class="profile-item">
+<strong>Recruiter</strong>
+<span>${escapeHtml(candidate.recruiter || "-")}</span>
+</div>
+
+<div class="profile-item profile-full">
+<strong>Remarks</strong>
+<span>${escapeHtml(candidate.remarks || "-")}</span>
+</div>
+
+</div>
+
+
+<div class="resume-box">
+
+<h3>📄 Candidate Resume</h3>
+
+${
+    candidate.resumeData
+    ?
+
+    `<div class="resume-file">
+
+        <span>
+            ${escapeHtml(candidate.resumeName || "Resume")}
+        </span>
+
+        <button
+            class="resume-btn"
+            onclick="viewResume('${candidate.id}')"
+        >
+            👁 View Resume
+        </button>
+
+    </div>`
+
+    :
+
+    `<div class="no-resume">
+        No resume uploaded for this candidate.
+    </div>`
+}
+
+</div>
+
+`;
+
+
+    document
+        .getElementById("viewModal")
+        .classList.add("show");
+
+}
+
+
+function closeViewModal(){
+
+    document
+        .getElementById("viewModal")
+        .classList.remove("show");
+
+}
+
+
+/* =========================
+   VIEW RESUME
+========================= */
+
+function viewResume(id){
+
+    const candidate =
+        candidates.find(
+            item => item.id === id
+        );
+
+
+    if(
+        !candidate ||
+        !candidate.resumeData
+    ){
+
+        alert("No resume is attached to this candidate.");
+
+        return;
+    }
+
+
+    const newWindow =
+        window.open("", "_blank");
+
+
+    if(!newWindow){
+
+        alert(
+            "Please allow pop-ups in your browser to view the resume."
+        );
+
+        return;
+    }
+
+
+    if(
+        candidate.resumeType ===
+        "application/pdf"
+    ){
+
+        newWindow.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>
+${escapeHtml(candidate.resumeName || "Resume")}
+</title>
+
+<style>
+
+html,body{
+    margin:0;
+    height:100%;
+}
+
+iframe{
+    width:100%;
+    height:100%;
+    border:0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<iframe
+    src="${candidate.resumeData}"
+></iframe>
+
+</body>
+
+</html>
+
+`);
+
+        newWindow.document.close();
+
+    }else{
+
+        /* DOC/DOCX cannot be reliably previewed by the browser.
+           Download/open the file instead. */
+
+        const link =
+            newWindow.document.createElement("a");
+
+        link.href =
+            candidate.resumeData;
+
+        link.download =
+            candidate.resumeName ||
+            "candidate-resume";
+
+        link.textContent =
+            "Download Resume";
+
+        link.style.cssText =
+            "display:block;padding:30px;font-family:Arial;font-size:18px;";
+
+        newWindow.document.body.appendChild(link);
+
+        link.click();
+
+    }
+
+}
+
+
+/* =========================
+   STATISTICS
+========================= */
+
+function updateStats(){
+
+    document
+        .getElementById("totalCandidates")
+        .textContent =
+        candidates.length;
+
+
+    document
+        .getElementById("activeCandidates")
+        .textContent =
+
+        candidates.filter(
+            candidate =>
+            String(candidate.status || "")
+            .toLowerCase() === "active"
+        ).length;
+
+
+    document
+        .getElementById("interviewingCandidates")
+        .textContent =
+
+        candidates.filter(
+            candidate =>
+            String(candidate.status || "")
+            .toLowerCase() === "interviewing"
+        ).length;
+
+
+    document
+        .getElementById("selectedCandidates")
+        .textContent =
+
+        candidates.filter(
+            candidate =>
+            String(candidate.status || "")
+            .toLowerCase() === "selected"
+        ).length;
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================
+   MODAL BACKDROPS
+========================= */
+
+document
+.getElementById("candidateModal")
+.addEventListener("click",function(event){
+
+    if(event.target === this){
+        closeCandidateModal();
+    }
+
+});
+
+
+document
+.getElementById("viewModal")
+.addEventListener("click",function(event){
+
+    if(event.target === this){
+        closeViewModal();
+    }
+
+});
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+renderCandidates();
 
 </script>
 
