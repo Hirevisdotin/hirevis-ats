@@ -1160,6 +1160,14 @@ function renderCandidates(list = candidates){
     View
 </button>
 
+<button
+    class="action-btn"
+    style="color:#c0392b;border-color:#f0c9c5;margin-left:5px;"
+    onclick="deleteCandidate('${candidate.id}')"
+>
+    Delete
+</button>
+
 </td>
 
 `;
@@ -1617,7 +1625,38 @@ function getNextCandidateNumber(){
 /* =========================
    VIEW CANDIDATE
 ========================= */
+function deleteCandidate(id){
 
+    const candidate = candidates.find(
+        item => item.id === id
+    );
+
+    if(!candidate){
+        return;
+    }
+
+    const confirmDelete = confirm(
+        "Are you sure you want to delete " +
+        candidate.name +
+        "?"
+    );
+
+    if(!confirmDelete){
+        return;
+    }
+
+    candidates = candidates.filter(
+        item => item.id !== id
+    );
+
+    if(!saveCandidates()){
+        return;
+    }
+
+    renderCandidates();
+
+    alert("Candidate deleted successfully.");
+}
 function viewCandidate(id){
 
     const candidate =
