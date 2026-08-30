@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hirevis ATS - Reports</title>
+
+<style>
+:root{
+    --orange:#F28C28;
+    --green:#5B8C2A;
+    --dark:#172018;
+    --muted:#6b756d;
+    --bg:#f5f7f4;
+    --white:#fff;
+    --border:#e4e8e3;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--bg);
+    color:var(--dark);
+}
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:250px;
+    background:var(--dark);
+    color:white;
+    padding:24px 16px;
+    overflow-y:auto;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:4px 10px 28px;
+}
+
+.brand-logo{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--orange),var(--green));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:18px;
+}
+
+.brand-text strong{display:block;font-size:18px}
+.brand-text span{font-size:11px;color:#b7c0b9}
+
+.nav-title{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#8f9b91;
+    padding:0 12px 8px;
+    margin-top:15px;
+}
+
+.nav-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#dce3dd;
+    text-decoration:none;
+    padding:11px 12px;
+    border-radius:9px;
+    margin-bottom:3px;
+    font-size:14px;
+}
+
+.nav-item:hover,
+.nav-item.active{
+    background:rgba(242,140,40,.16);
+    color:white;
+}
+
+.nav-icon{
+    width:22px;
+    text-align:center;
+}
+
+.main{
+    margin-left:250px;
+    padding:30px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:25px;
+}
+
+h1{
+    font-size:30px;
+    margin-bottom:7px;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.btn{
+    border:0;
+    border-radius:9px;
+    padding:11px 17px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.btn-primary{
+    background:var(--orange);
+    color:white;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+}
+
+.label{
+    color:var(--muted);
+    font-size:13px;
+}
+
+.number{
+    font-size:28px;
+    font-weight:800;
+    margin-top:8px;
+}
+
+.content-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-bottom:18px;
+}
+
+.panel{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+}
+
+.panel h2{
+    font-size:17px;
+    margin-bottom:18px;
+}
+
+.funnel-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:13px;
+}
+
+.funnel-label{
+    width:120px;
+    font-size:13px;
+}
+
+.bar-area{
+    flex:1;
+    height:27px;
+    background:#f0f2ef;
+    border-radius:7px;
+    overflow:hidden;
+}
+
+.bar{
+    height:100%;
+    background:linear-gradient(90deg,var(--orange),var(--green));
+    border-radius:7px;
+    min-width:3px;
+}
+
+.funnel-number{
+    width:35px;
+    text-align:right;
+    font-weight:700;
+}
+
+.report-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.report-item{
+    display:flex;
+    justify-content:space-between;
+    padding:12px;
+    background:#f7f8f6;
+    border-radius:9px;
+    font-size:13px;
+}
+
+.report-item strong{
+    font-size:14px;
+}
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    padding:13px;
+    background:#fafbfa;
+    color:var(--muted);
+    font-size:11px;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+}
+
+td{
+    padding:14px 13px;
+    font-size:13px;
+    border-bottom:1px solid var(--border);
+}
+
+.empty{
+    text-align:center;
+    padding:25px;
+    color:var(--muted);
+}
+
+@media(max-width:1000px){
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    .sidebar{
+        width:70px;
+        padding:18px 8px;
+    }
+
+    .brand-text,
+    .nav-title,
+    .nav-item span:not(.nav-icon){
+        display:none;
+    }
+
+    .nav-item{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:70px;
+        padding:18px;
+    }
+
+    .topbar{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+@media(max-width:480px){
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <div class="brand-logo">H</div>
+
+        <div class="brand-text">
+            <strong>Hirevis</strong>
+            <span>Recruitment Redefined</span>
+        </div>
+    </div>
+
+    <div class="nav-title">Main</div>
+
+    <a class="nav-item" href="../index.html">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+    </a>
+
+    <a class="nav-item" href="candidates.html">
+        <span class="nav-icon">👤</span>
+        <span>Candidates</span>
+    </a>
+
+    <a class="nav-item" href="clients.html">
+        <span class="nav-icon">🏢</span>
+        <span>Clients</span>
+    </a>
+
+    <a class="nav-item" href="requirements.html">
+        <span class="nav-icon">📋</span>
+        <span>Requirements</span>
+    </a>
+
+    <a class="nav-item" href="submissions.html">
+        <span class="nav-icon">📤</span>
+        <span>Submissions</span>
+    </a>
+
+    <a class="nav-item" href="interviews.html">
+        <span class="nav-icon">📅</span>
+        <span>Interviews</span>
+    </a>
+
+    <a class="nav-item" href="followups.html">
+        <span class="nav-icon">🔔</span>
+        <span>Follow-ups</span>
+    </a>
+
+    <div class="nav-title">Hiring</div>
+
+    <a class="nav-item" href="offers.html">
+        <span class="nav-icon">💼</span>
+        <span>Offers</span>
+    </a>
+
+    <a class="nav-item" href="joinings.html">
+        <span class="nav-icon">✅</span>
+        <span>Joinings</span>
+    </a>
+
+    <a class="nav-item active" href="reports.html">
+        <span class="nav-icon">📈</span>
+        <span>Reports</span>
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div>
+            <h1>Reports</h1>
+
+            <p class="subtitle">
+                Recruitment performance and hiring pipeline overview.
+            </p>
+        </div>
+
+        <button class="btn btn-primary" onclick="refreshReports()">
+            ↻ Refresh Reports
+        </button>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="stats">
+
+        <div class="card">
+            <div class="label">Candidates</div>
+            <div class="number" id="candidateCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Submissions</div>
+            <div class="number" id="submissionCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Interviews</div>
+            <div class="number" id="interviewCount">0</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Joinings</div>
+            <div class="number" id="joiningCount">0</div>
+        </div>
+
+    </section>
+
+
+    <section class="content-grid">
+
+        <!-- RECRUITMENT FUNNEL -->
+
+        <div class="panel">
+
+            <h2>📊 Recruitment Funnel</h2>
+
+            <div class="funnel-row">
+                <div class="funnel-label">Candidates</div>
+
+                <div class="bar-area">
+                    <div id="candidateBar" class="bar"></div>
+                </div>
+
+                <div id="candidateFunnel" class="funnel-number">0</div>
+            </div>
+
+            <div class="funnel-row">
+                <div class="funnel-label">Submissions</div>
+
+                <div class="bar-area">
+                    <div id="submissionBar" class="bar"></div>
+                </div>
+
+                <div id="submissionFunnel" class="funnel-number">0</div>
+            </div>
+
+            <div class="funnel-row">
+                <div class="funnel-label">Interviews</div>
+
+                <div class="bar-area">
+                    <div id="interviewBar" class="bar"></div>
+                </div>
+
+                <div id="interviewFunnel" class="funnel-number">0</div>
+            </div>
+
+            <div class="funnel-row">
+                <div class="funnel-label">Selections</div>
+
+                <div class="bar-area">
+                    <div id="selectionBar" class="bar"></div>
+                </div>
+
+                <div id="selectionFunnel" class="funnel-number">0</div>
+            </div>
+
+            <div class="funnel-row">
+                <div class="funnel-label">Joinings</div>
+
+                <div class="bar-area">
+                    <div id="joiningBar" class="bar"></div>
+                </div>
+
+                <div id="joiningFunnel" class="funnel-number">0</div>
+            </div>
+
+        </div>
+
+
+        <!-- PIPELINE -->
+
+        <div class="panel">
+
+            <h2>🔄 Pipeline Summary</h2>
+
+            <div class="report-list">
+
+                <div class="report-item">
+                    <span>Active Candidates</span>
+                    <strong id="activeCount">0</strong>
+                </div>
+
+                <div class="report-item">
+                    <span>Interviewing Candidates</span>
+                    <strong id="interviewingCount">0</strong>
+                </div>
+
+                <div class="report-item">
+                    <span>Selected Candidates</span>
+                    <strong id="selectedCount">0</strong>
+                </div>
+
+                <div class="report-item">
+                    <span>Feedback Pending</span>
+                    <strong id="feedbackPending">0</strong>
+                </div>
+
+                <div class="report-item">
+                    <span>Pending Joinings</span>
+                    <strong id="pendingJoinings">0</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RECRUITER REPORT -->
+
+    <section class="panel" style="margin-bottom:18px;">
+
+        <h2>👥 Recruiter Performance</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Recruiter</th>
+                        <th>Candidates</th>
+                        <th>Submissions</th>
+                        <th>Interviews</th>
+                        <th>Joinings</th>
+                    </tr>
+                </thead>
+
+                <tbody id="recruiterTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <!-- CLIENT REPORT -->
+
+    <section class="panel">
+
+        <h2>🏢 Client Activity</h2>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Submissions</th>
+                        <th>Interviews</th>
+                        <th>Joinings</th>
+                    </tr>
+                </thead>
+
+                <tbody id="clientTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+/* =========================
+   STORAGE HELPERS
+========================= */
+
+function getData(key){
+
+    try{
+
+        return JSON.parse(
+            localStorage.getItem(key) || "[]"
+        );
+
+    }catch(error){
+
+        return [];
+
+    }
+
+}
+
+
+/* =========================
+   LOAD REPORTS
+========================= */
+
+function refreshReports(){
+
+    const candidates =
+        getData("hirevisCandidates");
+
+    const submissions =
+        getData("hirevisSubmissions");
+
+    const interviews =
+        getData("hirevisInterviews");
+
+    const joinings =
+        getData("hirevisJoinings");
+
+
+    /* SUMMARY */
+
+    document.getElementById("candidateCount")
+        .textContent = candidates.length;
+
+    document.getElementById("submissionCount")
+        .textContent = submissions.length;
+
+    document.getElementById("interviewCount")
+        .textContent = interviews.length;
+
+    document.getElementById("joiningCount")
+        .textContent = joinings.length;
+
+
+    /* CANDIDATE STATUS */
+
+    const active =
+        candidates.filter(
+            item => item.status === "Active"
+        ).length;
+
+    const interviewing =
+        candidates.filter(
+            item => item.status === "Interviewing"
+        ).length;
+
+    const selected =
+        candidates.filter(
+            item => item.status === "Selected"
+        ).length;
+
+
+    document.getElementById("activeCount")
+        .textContent = active;
+
+    document.getElementById("interviewingCount")
+        .textContent = interviewing;
+
+    document.getElementById("selectedCount")
+        .textContent = selected;
+
+
+    /* FEEDBACK PENDING */
+
+    const feedbackPending =
+        submissions.filter(item =>
+            !item.feedback ||
+            item.feedback.trim() === ""
+        ).length;
+
+
+    document.getElementById("feedbackPending")
+        .textContent = feedbackPending;
+
+
+    /* JOINING STATUS */
+
+    const pendingJoinings =
+        joinings.filter(
+            item => item.status === "Pending"
+        ).length;
+
+
+    document.getElementById("pendingJoinings")
+        .textContent = pendingJoinings;
+
+
+    /* FUNNEL */
+
+    const maximum =
+        Math.max(
+            candidates.length,
+            submissions.length,
+            interviews.length,
+            selected,
+            joinings.length,
+            1
+        );
+
+
+    setBar(
+        "candidateBar",
+        candidates.length,
+        maximum
+    );
+
+    setBar(
+        "submissionBar",
+        submissions.length,
+        maximum
+    );
+
+    setBar(
+        "interviewBar",
+        interviews.length,
+        maximum
+    );
+
+    setBar(
+        "selectionBar",
+        selected,
+        maximum
+    );
+
+    setBar(
+        "joiningBar",
+        joinings.length,
+        maximum
+    );
+
+
+    document.getElementById("candidateFunnel")
+        .textContent = candidates.length;
+
+    document.getElementById("submissionFunnel")
+        .textContent = submissions.length;
+
+    document.getElementById("interviewFunnel")
+        .textContent = interviews.length;
+
+    document.getElementById("selectionFunnel")
+        .textContent = selected;
+
+    document.getElementById("joiningFunnel")
+        .textContent = joinings.length;
+
+
+    buildRecruiterReport(
+        candidates,
+        submissions,
+        interviews,
+        joinings
+    );
+
+
+    buildClientReport(
+        submissions,
+        interviews,
+        joinings
+    );
+
+}
+
+
+/* =========================
+   BAR
+========================= */
+
+function setBar(id,value,max){
+
+    const percent =
+        max === 0
+            ? 0
+            : (value / max) * 100;
+
+    document.getElementById(id)
+        .style.width =
+            percent + "%";
+
+}
+
+
+/* =========================
+   RECRUITER REPORT
+========================= */
+
+function buildRecruiterReport(
+    candidates,
+    submissions,
+    interviews,
+    joinings
+){
+
+    const recruiters = {};
+
+
+    function addRecruiter(name){
+
+        name =
+            name ||
+            "Unassigned";
+
+        if(!recruiters[name]){
+
+            recruiters[name] = {
+                candidates:0,
+                submissions:0,
+                interviews:0,
+                joinings:0
+            };
+
+        }
+
+    }
+
+
+    candidates.forEach(item => {
+
+        addRecruiter(item.recruiter);
+
+        recruiters[
+            item.recruiter || "Unassigned"
+        ].candidates++;
+
+    });
+
+
+    submissions.forEach(item => {
+
+        addRecruiter(item.recruiter);
+
+        recruiters[
+            item.recruiter || "Unassigned"
+        ].submissions++;
+
+    });
+
+
+    interviews.forEach(item => {
+
+        addRecruiter(item.recruiter);
+
+        recruiters[
+            item.recruiter || "Unassigned"
+        ].interviews++;
+
+    });
+
+
+    joinings.forEach(item => {
+
+        addRecruiter(item.recruiter);
+
+        recruiters[
+            item.recruiter || "Unassigned"
+        ].joinings++;
+
+    });
+
+
+    const table =
+        document.getElementById("recruiterTable");
+
+    table.innerHTML = "";
+
+
+    const names =
+        Object.keys(recruiters);
+
+
+    if(names.length === 0){
+
+        table.innerHTML =
+            '<tr><td colspan="5" class="empty">No recruiter data available yet.</td></tr>';
+
+        return;
+
+    }
+
+
+    names.forEach(name => {
+
+        const data =
+            recruiters[name];
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td><strong>${escapeHtml(name)}</strong></td>
+
+            <td>${data.candidates}</td>
+
+            <td>${data.submissions}</td>
+
+            <td>${data.interviews}</td>
+
+            <td>${data.joinings}</td>
+
+        `;
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================
+   CLIENT REPORT
+========================= */
+
+function buildClientReport(
+    submissions,
+    interviews,
+    joinings
+){
+
+    const clients = {};
+
+
+    function addClient(name){
+
+        name =
+            name ||
+            "Unassigned";
+
+        if(!clients[name]){
+
+            clients[name] = {
+                submissions:0,
+                interviews:0,
+                joinings:0
+            };
+
+        }
+
+    }
+
+
+    submissions.forEach(item => {
+
+        addClient(item.client);
+
+        clients[
+            item.client || "Unassigned"
+        ].submissions++;
+
+    });
+
+
+    interviews.forEach(item => {
+
+        addClient(item.client);
+
+        clients[
+            item.client || "Unassigned"
+        ].interviews++;
+
+    });
+
+
+    joinings.forEach(item => {
+
+        addClient(item.client);
+
+        clients[
+            item.client || "Unassigned"
+        ].joinings++;
+
+    });
+
+
+    const table =
+        document.getElementById("clientTable");
+
+    table.innerHTML = "";
+
+
+    const names =
+        Object.keys(clients);
+
+
+    if(names.length === 0){
+
+        table.innerHTML =
+            '<tr><td colspan="4" class="empty">No client activity available yet.</td></tr>';
+
+        return;
+
+    }
+
+
+    names.forEach(name => {
+
+        const data =
+            clients[name];
+
+        const row =
+            document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td><strong>${escapeHtml(name)}</strong></td>
+
+            <td>${data.submissions}</td>
+
+            <td>${data.interviews}</td>
+
+            <td>${data.joinings}</td>
+
+        `;
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+/* =========================
+   SECURITY
+========================= */
+
+function escapeHtml(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+refreshReports();
+
+</script>
+
+</body>
+</html>
